@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Data - Ingeniería en Informática</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .gradient-header {
+            background: linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #312e81 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-header::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2070') center/cover;
+            opacity: 0.2;
+            mix-blend-mode: overlay;
+            z-index: 0;
+        }
+
+        .sticky-unit-nav {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .unit-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .unit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        .img-placeholder {
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        section {
+            scroll-margin-top: 140px; /* Ajuste para que el sticky nav no tape el título */
+        }
+
+        .unit-badge {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .subtheme-list li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+        }
+
+        /* Icono personalizado para viñetas según el color del padre */
+        .subtheme-list.blue li::before { content: "\f1c0"; color: #2563eb; }
+        .subtheme-list.indigo li::before { content: "\f1c0"; color: #4f46e5; }
+        .subtheme-list.amber li::before { content: "\f1c0"; color: #d97706; }
+        .subtheme-list.emerald li::before { content: "\f1c0"; color: #059669; }
+
+        .subtheme-list li::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            font-size: 0.7rem;
+            top: 4px;
+        }
+
+        /* Estilo para las cajas de objetivos */
+        .objective-box {
+            position: relative;
+            overflow: hidden;
+        }
+        .objective-box::after {
+            content: '\f0eb'; /* bombilla */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            font-size: 5rem;
+            opacity: 0.05;
+            transform: rotate(-20deg);
+        }
+
+        /* Estilos para las cartas giratorias del ejercicio */
+        .flip-card {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Navegación Principal -->
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-indigo-900 p-2 rounded-lg shadow-sm">
+                        <i class="fas fa-network-wired text-white"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold text-slate-900 block leading-none">Ingeniería en Informática</span>
+                        <span class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">Tecnología de la Información</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <!-- Orden actualizado de enlaces -->
+                    <a href="#inicio" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition">Inicio</a>
+                    <a href="#evaluacion" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition">Evaluación</a>
+                    <a href="#unidades-seccion" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition">Unidades</a>
+                    <a href="#intro" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition">Introducción</a>
+                    <a href="#ejercicio" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition">Ejercicio</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header / Hero -->
+    <header id="inicio" class="gradient-header text-white py-24 px-4">
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <span class="inline-block py-1 px-3 rounded-full bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-sm">
+                Especialidad en Ciencia de Datos
+            </span>
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-tight">
+                Big Data
+            </h1>
+            <p class="text-indigo-100 text-lg md:text-xl font-light mb-12 max-w-3xl mx-auto leading-relaxed">
+                Domina el análisis, procesamiento y almacenamiento de grandes volúmenes de datos. Desde Hadoop y NoSQL hasta la toma de decisiones basada en inteligencia de negocios.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div class="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl hover:bg-white/10 transition duration-300">
+                    <i class="fas fa-chalkboard-teacher text-indigo-300 text-2xl mb-3"></i>
+                    <p class="text-[10px] text-indigo-200 uppercase font-bold mb-1">Docente</p>
+                    <p class="font-semibold text-lg">Ing. Informática</p>
+                </div>
+                <div class="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl hover:bg-white/10 transition duration-300">
+                    <i class="fas fa-database text-indigo-300 text-2xl mb-3"></i>
+                    <p class="text-[10px] text-indigo-200 uppercase font-bold mb-1">Clave Asignatura</p>
+                    <p class="font-semibold text-lg">INF-BD26</p>
+                </div>
+                <div class="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl hover:bg-white/10 transition duration-300">
+                    <i class="fas fa-clock text-indigo-300 text-2xl mb-3"></i>
+                    <p class="text-[10px] text-indigo-200 uppercase font-bold mb-1">Periodo</p>
+                    <p class="font-semibold text-lg">Ene - Jun 2026</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sección de Evaluación (MOVIDA AL PRINCIPIO) -->
+    <section id="evaluacion" class="py-16 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl font-bold text-slate-800 uppercase tracking-widest">Criterios de Evaluación</h2>
+                <div class="h-1 w-20 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Prácticas 40% -->
+                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition text-center group relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-orange-500"></div>
+                    <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-orange-600 group-hover:text-white transition duration-300 shadow-lg shadow-orange-100">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="text-5xl font-black text-slate-900 mb-1 tracking-tighter">40<span class="text-2xl align-top text-orange-500">%</span></div>
+                    <h3 class="font-bold text-slate-700 text-lg uppercase tracking-wide">Prácticas</h3>
+                    <p class="text-sm text-slate-500 mt-3 leading-relaxed">Ejercicios en laboratorio, implementación de clusters y reportes técnicos de prácticas.</p>
+                </div>
+
+                <!-- Proyecto 50% -->
+                <div class="p-8 rounded-3xl bg-indigo-600 border border-indigo-500 shadow-xl hover:shadow-2xl transition text-center group transform md:-translate-y-4 relative overflow-hidden">
+                     <div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+                    <div class="w-16 h-16 bg-white/20 text-white rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 backdrop-blur-sm">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <div class="text-5xl font-black text-white mb-1 tracking-tighter">50<span class="text-2xl align-top text-indigo-200">%</span></div>
+                    <h3 class="font-bold text-white text-lg uppercase tracking-wide">Proyecto</h3>
+                    <p class="text-sm text-indigo-100 mt-3 leading-relaxed">Desarrollo integral de una solución de Big Data aplicada a una problemática real.</p>
+                </div>
+
+                <!-- Asistencia 10% -->
+                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition text-center group relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
+                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-emerald-600 group-hover:text-white transition duration-300 shadow-lg shadow-emerald-100">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div class="text-5xl font-black text-slate-900 mb-1 tracking-tighter">10<span class="text-2xl align-top text-emerald-500">%</span></div>
+                    <h3 class="font-bold text-slate-700 text-lg uppercase tracking-wide">Asistencia</h3>
+                    <p class="text-sm text-slate-500 mt-3 leading-relaxed">Puntualidad, permanencia y participación activa durante las sesiones de clase.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NAVEGACIÓN SUPERIOR DE UNIDADES (Sticky) (MOVIDO AL PRINCIPIO) -->
+    <div id="unidades-seccion" class="sticky-unit-nav border-b border-gray-200 py-4 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 overflow-x-auto">
+            <div class="flex space-x-3 md:space-x-6 min-w-max justify-center">
+                <a href="#u1" class="unit-link px-6 py-2.5 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-md transition" data-target="u1">Unidad 1</a>
+                <a href="#u2" class="unit-link px-6 py-2.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition" data-target="u2">Unidad 2</a>
+                <a href="#u3" class="unit-link px-6 py-2.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition" data-target="u3">Unidad 3</a>
+                <a href="#u4" class="unit-link px-6 py-2.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition" data-target="u4">Unidad 4</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO DE UNIDADES (MOVIDO AL PRINCIPIO) -->
+    <main class="max-w-7xl mx-auto px-4 py-16 space-y-24">
+
+        <!-- UNIDAD 1 -->
+        <section id="u1" class="unit-card bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-lg">
+            <div class="flex flex-col md:flex-row gap-10">
+                <div class="md:w-7/12 space-y-8">
+                    <!-- Header Unidad -->
+                    <div class="flex items-start space-x-4">
+                        <span class="bg-blue-600 text-white w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl font-black text-xl shadow-lg shadow-blue-200">1</span>
+                        <div>
+                            <span class="unit-badge bg-blue-50 text-blue-700 mb-2 inline-block">Fundamentos</span>
+                            <h2 class="text-3xl font-bold text-slate-900 leading-tight">Introducción a Big Data</h2>
+                        </div>
+                    </div>
+
+                    <!-- Objetivos Box -->
+                    <div class="objective-box bg-slate-50 p-6 rounded-2xl border-l-4 border-blue-500">
+                        <h4 class="font-bold text-blue-900 text-sm uppercase tracking-wide mb-3">Objetivos de Aprendizaje</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-xs font-bold text-slate-700 mb-1"><i class="fas fa-check-circle text-blue-500 mr-1"></i> Específicos:</p>
+                                <p class="text-sm text-slate-600">Analiza los fundamentos teóricos de Big Data.</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-700 mb-1"><i class="fas fa-users text-blue-500 mr-1"></i> Genéricos:</p>
+                                <ul class="text-sm text-slate-600 list-disc list-inside">
+                                    <li>Búsqueda y análisis de información.</li>
+                                    <li>Trabajo colaborativo e intercambio de ideas.</li>
+                                    <li>Aplicación de modelos y metodologías.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Temario -->
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-4 flex items-center border-b border-slate-100 pb-2">
+                            <i class="fas fa-list-ul mr-2 text-blue-500"></i>Temario
+                        </h4>
+                        <ul class="subtheme-list blue text-slate-600 text-sm grid md:grid-cols-2 gap-x-4">
+                            <li><strong>1.1</strong> Definición y Características.</li>
+                            <li><strong>1.2</strong> Tipos de Datos.</li>
+                            <li><strong>1.3</strong> Áreas y Aplicaciones.</li>
+                            <li><strong>1.4</strong> Modelos y Tareas.</li>
+                            <li><strong>1.5</strong> Métodos y Técnicas.</li>
+                            <li><strong>1.6</strong> Fuentes de Big Data.</li>
+                            <li><strong>1.7</strong> Las 5 V de Big Data.</li>
+                            <li><strong>1.8</strong> Etapas en los procesos.</li>
+                            <li><strong>1.9</strong> Gobernanza de Big Data.</li>
+                            <li><strong>1.10</strong> Problemática que plantea.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Imagen -->
+                <div class="md:w-5/12 img-placeholder min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000" 
+                         alt="Mundo de Datos" 
+                         class="w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x400?text=Introducción+Big+Data'">
+                </div>
+            </div>
+        </section>
+
+        <!-- UNIDAD 2 -->
+        <section id="u2" class="unit-card bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-lg">
+            <div class="flex flex-col md:flex-row-reverse gap-10">
+                <div class="md:w-7/12 space-y-8">
+                    <!-- Header Unidad -->
+                    <div class="flex items-start space-x-4">
+                        <span class="bg-indigo-600 text-white w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl font-black text-xl shadow-lg shadow-indigo-200">2</span>
+                        <div>
+                            <span class="unit-badge bg-indigo-50 text-indigo-700 mb-2 inline-block">Business Intelligence</span>
+                            <h2 class="text-3xl font-bold text-slate-900 leading-tight">Almacenes de Datos (Datawarehouse)</h2>
+                            <p class="text-sm text-slate-500 mt-1">Soporte y Toma de Decisiones</p>
+                        </div>
+                    </div>
+
+                    <!-- Objetivos Box -->
+                    <div class="objective-box bg-slate-50 p-6 rounded-2xl border-l-4 border-indigo-500">
+                        <h4 class="font-bold text-indigo-900 text-sm uppercase tracking-wide mb-3">Objetivos de Aprendizaje</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-xs font-bold text-slate-700 mb-1"><i class="fas fa-check-circle text-indigo-500 mr-1"></i> Específicos:</p>
+                                <p class="text-sm text-slate-600">Conoce y aplica las tecnologías emergentes de bases de datos para el soporte en la toma de decisiones.</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-700 mb-1"><i class="fas fa-brain text-indigo-500 mr-1"></i> Genéricos:</p>
+                                <p class="text-sm text-slate-600">Abstracción, análisis, síntesis y organización de información de diversas fuentes.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Temario -->
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-4 flex items-center border-b border-slate-100 pb-2">
+                            <i class="fas fa-list-ul mr-2 text-indigo-500"></i>Temario
+                        </h4>
+                        <ul class="subtheme-list indigo text-slate-600 text-sm">
+                            <li><strong>2.1</strong> Bodegas de Datos (Datawarehouse).</li>
+                            <li><strong>2.2</strong> Procesamientos de Transacciones en Línea (OLTP).</li>
+                            <li><strong>2.3</strong> Procesamiento y Análisis en Línea (OLAP).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Imagen -->
+                <div class="md:w-5/12 img-placeholder min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=1000" 
+                         alt="Servidores Data Warehouse" 
+                         class="w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x400?text=Data+Warehouse'">
+                </div>
+            </div>
+        </section>
+
+        <!-- UNIDAD 3 -->
+        <section id="u3" class="unit-card bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-lg">
+            <div class="flex flex-col md:flex-row gap-10">
+                <div class="md:w-7/12 space-y-8">
+                    <!-- Header Unidad -->
+                    <div class="flex items-start space-x-4">
+                        <span class="bg-amber-500 text-white w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl font-black text-xl shadow-lg shadow-amber-200">3</span>
+                        <div>
+                            <span class="unit-badge bg-amber-50 text-amber-700 mb-2 inline-block">Ecosistema Hadoop</span>
+                            <h2 class="text-3xl font-bold text-slate-900 leading-tight">Componentes de una Plataforma</h2>
+                        </div>
+                    </div>
+
+                    <!-- Objetivos Box -->
+                    <div class="objective-box bg-slate-50 p-6 rounded-2xl border-l-4 border-amber-500">
+                        <h4 class="font-bold text-amber-900 text-sm uppercase tracking-wide mb-3">Objetivos de Aprendizaje</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-xs font-bold text-slate-700 mb-1"><i class="fas fa-check-circle text-amber-500 mr-1"></i> Específicos:</p>
+                                <p class="text-sm text-slate-600">Implementar una arquitectura Hadoop para Big Data mediante fundamentos teóricos y prácticos.</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-700 mb-1"><i class="fas fa-lightbulb text-amber-500 mr-1"></i> Genéricos:</p>
+                                <p class="text-sm text-slate-600">Capacidad de emprendimiento, liderazgo y trabajo en equipo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Temario -->
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-4 flex items-center border-b border-slate-100 pb-2">
+                            <i class="fas fa-list-ul mr-2 text-amber-500"></i>Temario
+                        </h4>
+                        <ul class="subtheme-list amber text-slate-600 text-sm">
+                            <li><strong>3.1</strong> Plataforma de código abierto.</li>
+                            <li><strong>3.2</strong> Aplicaciones de desarrollo Hadoop.</li>
+                            <li><strong>3.3</strong> Hadoop Streaming.</li>
+                            <li><strong>3.4</strong> Copia de datos básica.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Imagen -->
+                <div class="md:w-5/12 img-placeholder min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80&w=1000" 
+                         alt="Dashboard Analytics" 
+                         class="w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x400?text=Plataforma+Hadoop'">
+                </div>
+            </div>
+        </section>
+
+        <!-- UNIDAD 4 -->
+        <section id="u4" class="unit-card bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-lg">
+            <div class="flex flex-col md:flex-row-reverse gap-10">
+                <div class="md:w-7/12 space-y-8">
+                    <!-- Header Unidad -->
+                    <div class="flex items-start space-x-4">
+                        <span class="bg-emerald-600 text-white w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl font-black text-xl shadow-lg shadow-emerald-200">4</span>
+                        <div>
+                            <span class="unit-badge bg-emerald-50 text-emerald-700 mb-2 inline-block">NoSQL & JSON</span>
+                            <h2 class="text-3xl font-bold text-slate-900 leading-tight">Bases de Datos NoSQL</h2>
+                        </div>
+                    </div>
+
+                    <!-- Objetivos Box -->
+                    <div class="objective-box bg-slate-50 p-6 rounded-2xl border-l-4 border-emerald-500">
+                        <h4 class="font-bold text-emerald-900 text-sm uppercase tracking-wide mb-3">Objetivos de Aprendizaje</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-xs font-bold text-slate-700 mb-1"><i class="fas fa-check-circle text-emerald-500 mr-1"></i> Específicos:</p>
+                                <p class="text-sm text-slate-600">Implementar y comprender teórica y prácticamente las BD NoSQL y sus diferencias con SQL.</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-700 mb-1"><i class="fas fa-rocket text-emerald-500 mr-1"></i> Genéricos:</p>
+                                <p class="text-sm text-slate-600">Abstracción, síntesis y habilidades de investigación en diversas fuentes.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Temario -->
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-4 flex items-center border-b border-slate-100 pb-2">
+                            <i class="fas fa-list-ul mr-2 text-emerald-500"></i>Temario
+                        </h4>
+                        <ul class="subtheme-list emerald text-slate-600 text-sm grid md:grid-cols-2 gap-x-4">
+                            <li><strong>4.1</strong> Definición de BD NoSQL.</li>
+                            <li><strong>4.2</strong> Características.</li>
+                            <li><strong>4.3</strong> SQL versus NoSQL.</li>
+                            <li><strong>4.4</strong> Arquitectura y tipos.</li>
+                            <li><strong>4.5</strong> JSON/BSON: Estructura de Objetos.</li>
+                            <li><strong>4.6</strong> Bases de Datos No SQL.</li>
+                            <li><strong>4.7</strong> Ejemplos (MongoDB, Cassandra, etc).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Imagen -->
+                <div class="md:w-5/12 img-placeholder min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1000" 
+                         alt="Código JSON" 
+                         class="w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x400?text=NoSQL+Database'">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Sección de Introducción y Aplicaciones (MOVIDA AL FINAL) -->
+    <section id="intro" class="py-16 bg-slate-50 overflow-hidden border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-indigo-600 font-bold tracking-widest text-sm uppercase">Panorama General</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">¿Qué es realmente Big Data?</h2>
+                <p class="max-w-2xl mx-auto mt-4 text-slate-600 text-lg">
+                    No se trata solo de tener "muchos datos". Big Data es el conjunto de tecnologías y estrategias que permiten capturar, gestionar y procesar información que supera la capacidad de las herramientas de software habituales.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                <!-- Por qué es importante -->
+                <div class="space-y-8">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-xl bg-indigo-100 text-indigo-600">
+                                <i class="fas fa-server text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-slate-900">Más allá de SQL</h3>
+                            <p class="mt-2 text-slate-600">Aprendemos a usar bases de datos NoSQL (como MongoDB) y frameworks como Hadoop para manejar datos no estructurados (videos, logs, redes sociales).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-xl bg-blue-100 text-blue-600">
+                                <i class="fas fa-chart-line text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-slate-900">Toma de Decisiones</h3>
+                            <p class="mt-2 text-slate-600">Transformamos datos crudos en <strong>Inteligencia de Negocios (BI)</strong>. El objetivo final no es almacenar, sino predecir y optimizar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Aplicaciones -->
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 relative shadow-sm">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg transform rotate-12">
+                        APLICACIONES REALES
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-6">¿Dónde aplicaremos esto?</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition flex items-center">
+                            <i class="fab fa-netflix text-red-600 text-2xl w-10"></i>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Entretenimiento</h4>
+                                <p class="text-xs text-slate-500">Algoritmos de recomendación basados en tu historial de visualización.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition flex items-center">
+                            <i class="fas fa-car-side text-slate-800 text-2xl w-10"></i>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Fórmula 1 & IoT</h4>
+                                <p class="text-xs text-slate-500">Sensores enviando terabytes de telemetría en tiempo real para estrategias de carrera.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition flex items-center">
+                            <i class="fas fa-shopping-cart text-emerald-600 text-2xl w-10"></i>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">E-Commerce</h4>
+                                <p class="text-xs text-slate-500">Detección de fraude bancario y análisis de patrones de compra.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Ejercicio Didáctico (MOVIDA AL FINAL) -->
+    <section id="ejercicio" class="py-16 bg-slate-900 relative overflow-hidden">
+        <!-- Fondo decorativo -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-64 h-64 bg-blue-500 rounded-full blur-3xl mix-blend-multiply filter opacity-70 animate-blob"></div>
+            <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500 rounded-full blur-3xl mix-blend-multiply filter opacity-70 animate-blob animation-delay-2000"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-10">
+                <span class="inline-block py-1 px-3 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold uppercase tracking-widest mb-4 border border-blue-500/30">
+                    Actividad de Inicio
+                </span>
+                <h2 class="text-3xl font-bold text-white mb-4">El Reto de las 5 V's</h2>
+                <p class="text-slate-300 max-w-2xl mx-auto">
+                    Haz clic en las tarjetas para descubrir qué característica ("V") de Big Data describe cada situación del mundo real.
+                </p>
+            </div>
+
+            <!-- Grid de Cartas Giratorias -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                
+                <!-- Carta 1 -->
+                <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-white rounded-2xl shadow-xl border-b-4 border-blue-500">
+                            <div class="bg-blue-100 p-3 rounded-full mb-4">
+                                <i class="fas fa-hdd text-blue-600 text-xl"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-600 text-center">
+                                "Facebook procesa más de <strong>500 Terabytes</strong> de datos nuevos cada día."
+                            </p>
+                            <p class="text-xs text-slate-400 mt-4">(Haz clic para ver)</p>
+                        </div>
+                        <div class="flip-card-back bg-blue-600 text-white rounded-2xl shadow-xl">
+                            <h3 class="text-xl font-bold mb-2">VOLUMEN</h3>
+                            <p class="text-xs leading-relaxed opacity-90">
+                                Se refiere a la cantidad masiva de datos generados. Las herramientas tradicionales no pueden almacenar tal magnitud.
+                            </p>
+                            <i class="fas fa-check-circle mt-4 text-2xl opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carta 2 -->
+                <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-white rounded-2xl shadow-xl border-b-4 border-amber-500">
+                            <div class="bg-amber-100 p-3 rounded-full mb-4">
+                                <i class="fas fa-tachometer-alt text-amber-600 text-xl"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-600 text-center">
+                                "La Bolsa de Valores analiza miles de transacciones en <strong>milisegundos</strong>."
+                            </p>
+                            <p class="text-xs text-slate-400 mt-4">(Haz clic para ver)</p>
+                        </div>
+                        <div class="flip-card-back bg-amber-600 text-white rounded-2xl shadow-xl">
+                            <h3 class="text-xl font-bold mb-2">VELOCIDAD</h3>
+                            <p class="text-xs leading-relaxed opacity-90">
+                                La rapidez con la que los datos son generados, procesados y analizados. ¡A veces en tiempo real!
+                            </p>
+                            <i class="fas fa-bolt mt-4 text-2xl opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carta 3 -->
+                <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-white rounded-2xl shadow-xl border-b-4 border-purple-500">
+                            <div class="bg-purple-100 p-3 rounded-full mb-4">
+                                <i class="fas fa-shapes text-purple-600 text-xl"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-600 text-center">
+                                "Analizar textos de Twitter, imágenes de Instagram y audios de WhatsApp <strong>a la vez</strong>."
+                            </p>
+                            <p class="text-xs text-slate-400 mt-4">(Haz clic para ver)</p>
+                        </div>
+                        <div class="flip-card-back bg-purple-600 text-white rounded-2xl shadow-xl">
+                            <h3 class="text-xl font-bold mb-2">VARIEDAD</h3>
+                            <p class="text-xs leading-relaxed opacity-90">
+                                Datos estructurados (tablas), semi-estructurados (JSON) y no estructurados (video/audio).
+                            </p>
+                            <i class="fas fa-layer-group mt-4 text-2xl opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Carta 4 -->
+                 <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-white rounded-2xl shadow-xl border-b-4 border-emerald-500">
+                            <div class="bg-emerald-100 p-3 rounded-full mb-4">
+                                <i class="fas fa-shield-alt text-emerald-600 text-xl"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-600 text-center">
+                                "Filtrar noticias falsas (Fake News) o datos erróneos de sensores GPS dañados."
+                            </p>
+                            <p class="text-xs text-slate-400 mt-4">(Haz clic para ver)</p>
+                        </div>
+                        <div class="flip-card-back bg-emerald-600 text-white rounded-2xl shadow-xl">
+                            <h3 class="text-xl font-bold mb-2">VERACIDAD</h3>
+                            <p class="text-xs leading-relaxed opacity-90">
+                                La fiabilidad y calidad de los datos. Datos "sucios" llevan a decisiones equivocadas.
+                            </p>
+                            <i class="fas fa-check-double mt-4 text-2xl opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carta 5 -->
+                <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-white rounded-2xl shadow-xl border-b-4 border-rose-500">
+                            <div class="bg-rose-100 p-3 rounded-full mb-4">
+                                <i class="fas fa-gem text-rose-600 text-xl"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-600 text-center">
+                                "Usar los datos para <strong>aumentar las ventas</strong> un 20% este trimestre."
+                            </p>
+                            <p class="text-xs text-slate-400 mt-4">(Haz clic para ver)</p>
+                        </div>
+                        <div class="flip-card-back bg-rose-600 text-white rounded-2xl shadow-xl">
+                            <h3 class="text-xl font-bold mb-2">VALOR</h3>
+                            <p class="text-xs leading-relaxed opacity-90">
+                                El fin último de Big Data. Los datos son inútiles si no se convierten en beneficio o conocimiento.
+                            </p>
+                            <i class="fas fa-dollar-sign mt-4 text-2xl opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-8 text-center">
+                <p class="text-slate-400 text-sm italic">
+                    <i class="fas fa-info-circle mr-2"></i> Tip: Estas "5 V's" son la base teórica de la Unidad 1.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-white py-12 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-700 p-2 rounded-lg">
+                    <i class="fas fa-university text-white text-sm"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold tracking-tight leading-none">Ingeniería en Informática</h3>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1 italic">Especialidad en Tecnologías de Información</p>
+                </div>
+            </div>
+            
+            <div class="text-center md:text-right">
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">© 2026 Big Data</p>
+                <p class="text-xs text-slate-400 mt-1">Material Educativo Digital</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lógica de navegación sticky y resaltado activo
+        window.addEventListener('scroll', () => {
+            let current = "";
+            const sections = document.querySelectorAll("section");
+            const navLinks = document.querySelectorAll(".unit-link"); // Solo selecciona enlaces de unidades para el sticky nav
+
+            // Detectar qué sección está visible (con ajuste de offset)
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (window.pageYOffset >= sectionTop - 250) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            // Actualizar clases de los botones (Unidades)
+            navLinks.forEach((link) => {
+                link.classList.remove("bg-blue-600", "text-white", "shadow-md");
+                link.classList.add("bg-white", "text-slate-600", "border-slate-200");
+
+                if (link.dataset.target === current) {
+                    link.classList.remove("bg-white", "text-slate-600", "border-slate-200");
+                    link.classList.add("bg-blue-600", "text-white", "shadow-md");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
