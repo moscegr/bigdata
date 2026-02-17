@@ -72,6 +72,19 @@
             100% { transform: scale(1); }
         }
         .pop { animation: pop 0.3s; }
+
+        .gcp-badge {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            border: 1px solid #d2e3fc;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+        }
+        .gcp-badge i { margin-right: 4px; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
@@ -124,14 +137,24 @@
                     <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.1</span>
                     <h2 class="text-2xl font-bold text-slate-800">Definición y Características</h2>
                 </div>
-                <div class="content-card p-6">
-                    <p class="text-slate-600 mb-4">
-                        Big Data no es solo "muchos datos". Se refiere a conjuntos de datos cuyo <strong>volumen, velocidad o variedad</strong> es tan grande que dificulta su captura, gestión, procesamiento o análisis mediante tecnologías convencionales (como una base de datos SQL tradicional o Excel).
-                    </p>
-                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
-                        <p class="text-sm text-blue-800">
-                            <strong>Concepto clave:</strong> El umbral de Big Data es relativo y cambia con el tiempo. Lo que hoy es Big Data, mañana puede ser procesado por tu smartphone.
-                        </p>
+                <div class="content-card p-6 relative overflow-hidden">
+                    <div class="md:flex gap-6">
+                        <div class="md:w-2/3">
+                            <p class="text-slate-600 mb-4">
+                                Big Data no es solo "muchos datos". Se refiere a conjuntos de datos cuyo <strong>volumen, velocidad o variedad</strong> es tan grande que dificulta su captura, gestión, procesamiento o análisis mediante tecnologías convencionales (como una base de datos SQL tradicional o Excel).
+                            </p>
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-4">
+                                <p class="text-sm text-blue-800">
+                                    <strong>¿Sabías que?</strong> Google fue pionero en esto. Para indexar todo internet, inventaron tecnologías como <em>Google File System</em> y <em>MapReduce</em>, que luego inspiraron a Hadoop.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="md:w-1/3">
+                             <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=600" 
+                                  alt="Data Center" 
+                                  class="rounded-xl shadow-md w-full h-40 object-cover"
+                                  onerror="this.src='https://placehold.co/400x300?text=Data+Center'">
+                        </div>
                     </div>
                 </div>
             </section>
@@ -146,20 +169,29 @@
                     <p class="text-slate-600 mb-6">En Big Data, raramente trabajamos con tablas perfectas. Clasificamos los datos en tres categorías:</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help" title="Tablas, Hojas de cálculo, Bases SQL">
+                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help group" title="Tablas, Hojas de cálculo, Bases SQL">
                             <div class="text-center mb-2"><i class="fas fa-table text-emerald-500 text-2xl"></i></div>
                             <h3 class="font-bold text-center text-sm">Estructurados</h3>
                             <p class="text-xs text-center text-slate-500 mt-1">Formato fijo (Filas/Columnas)</p>
+                            <div class="mt-3 text-xs bg-emerald-50 text-emerald-700 p-2 rounded text-center opacity-75">
+                                <strong>Ejemplo:</strong> Tu boleta de calificaciones en el sistema escolar.
+                            </div>
                         </div>
-                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help" title="HTML, XML, JSON, Emails">
+                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help group" title="HTML, XML, JSON, Emails">
                             <div class="text-center mb-2"><i class="fas fa-code text-amber-500 text-2xl"></i></div>
                             <h3 class="font-bold text-center text-sm">Semi-Estructurados</h3>
                             <p class="text-xs text-center text-slate-500 mt-1">Tienen etiquetas pero no esquema rígido</p>
+                            <div class="mt-3 text-xs bg-amber-50 text-amber-700 p-2 rounded text-center opacity-75">
+                                <strong>Ejemplo:</strong> Un tweet (tiene texto, autor, fecha en formato JSON).
+                            </div>
                         </div>
-                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help" title="Video, Audio, Imágenes, PDF">
+                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help group" title="Video, Audio, Imágenes, PDF">
                             <div class="text-center mb-2"><i class="fas fa-photo-video text-rose-500 text-2xl"></i></div>
                             <h3 class="font-bold text-center text-sm">No Estructurados</h3>
                             <p class="text-xs text-center text-slate-500 mt-1">Binarios o texto libre. El 80% de los datos.</p>
+                            <div class="mt-3 text-xs bg-rose-50 text-rose-700 p-2 rounded text-center opacity-75">
+                                <strong>Ejemplo:</strong> Una nota de voz de WhatsApp o un video de YouTube.
+                            </div>
                         </div>
                     </div>
 
@@ -179,7 +211,7 @@
   "estado": "ACTIVO"
 }</code></pre>
                         <p class="text-xs text-slate-400 mt-2 border-t border-slate-700 pt-2">
-                            <i class="fas fa-info-circle mr-1"></i> Nota como los datos pueden anidar arrays y objetos, algo difícil en una tabla plana.
+                            <i class="fas fa-info-circle mr-1"></i> <strong>Nota GCP:</strong> Este tipo de dato JSON es nativo para herramientas como <strong>Google BigQuery</strong>, donde podemos consultarlo directamente.
                         </p>
                     </div>
                 </div>
@@ -192,21 +224,40 @@
                     <h2 class="text-2xl font-bold text-slate-800">Áreas y Aplicaciones</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="content-card p-5 border-l-4 border-red-500">
-                        <h3 class="font-bold text-slate-800 mb-2">Marketing y Ventas</h3>
-                        <p class="text-sm text-slate-600">Segmentación de clientes, predicción de abandono (churn), recomendación de productos (Amazon/Netflix).</p>
+                    <div class="content-card p-0 overflow-hidden border-l-4 border-red-500">
+                        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=400" class="w-full h-32 object-cover" alt="Marketing">
+                        <div class="p-4">
+                            <h3 class="font-bold text-slate-800 mb-1">Marketing y Ventas</h3>
+                            <p class="text-sm text-slate-600 mb-2">Recomendación de productos (Netflix/Spotify).</p>
+                            <span class="gcp-badge"><i class="fab fa-google"></i> Google Analytics</span>
+                        </div>
                     </div>
-                    <div class="content-card p-5 border-l-4 border-green-500">
-                        <h3 class="font-bold text-slate-800 mb-2">Salud</h3>
-                        <p class="text-sm text-slate-600">Análisis de genoma, predicción de epidemias, monitoreo de pacientes en tiempo real.</p>
+                    <div class="content-card p-0 overflow-hidden border-l-4 border-green-500">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=400" class="w-full h-32 object-cover" alt="Salud">
+                        <div class="p-4">
+                            <h3 class="font-bold text-slate-800 mb-1">Salud</h3>
+                            <p class="text-sm text-slate-600 mb-2">Análisis de genoma y monitoreo en tiempo real.</p>
+                            <span class="gcp-badge"><i class="fas fa-dna"></i> Healthcare API</span>
+                        </div>
                     </div>
-                    <div class="content-card p-5 border-l-4 border-orange-500">
-                        <h3 class="font-bold text-slate-800 mb-2">Finanzas</h3>
-                        <p class="text-sm text-slate-600">Detección de fraude, análisis de riesgo crediticio, trading algorítmico de alta frecuencia.</p>
+                    <div class="content-card p-0 overflow-hidden border-l-4 border-orange-500">
+                        <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=400" 
+                             class="w-full h-32 object-cover" 
+                             alt="Finanzas"
+                             onerror="this.src='https://placehold.co/400x200?text=Finanzas'">
+                        <div class="p-4">
+                            <h3 class="font-bold text-slate-800 mb-1">Finanzas</h3>
+                            <p class="text-sm text-slate-600 mb-2">Detección de fraude y trading algorítmico.</p>
+                            <span class="gcp-badge"><i class="fas fa-shield-alt"></i> Fraud Finder</span>
+                        </div>
                     </div>
-                    <div class="content-card p-5 border-l-4 border-purple-500">
-                        <h3 class="font-bold text-slate-800 mb-2">Deportes</h3>
-                        <p class="text-sm text-slate-600">Moneyball: Análisis de rendimiento de jugadores, prevención de lesiones mediante sensores.</p>
+                    <div class="content-card p-0 overflow-hidden border-l-4 border-purple-500">
+                        <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=400" class="w-full h-32 object-cover" alt="Deportes">
+                        <div class="p-4">
+                            <h3 class="font-bold text-slate-800 mb-1">Deportes (F1)</h3>
+                            <p class="text-sm text-slate-600 mb-2">Análisis de telemetría en tiempo real.</p>
+                            <span class="gcp-badge"><i class="fas fa-car"></i> Vertex AI</span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -219,7 +270,7 @@
                 </div>
                 <div class="content-card overflow-hidden">
                     <div class="bg-slate-50 p-4 border-b">
-                        <p class="text-sm text-slate-600">Para extraer valor, aplicamos diferentes enfoques matemáticos y computacionales.</p>
+                        <p class="text-sm text-slate-600">Para extraer valor, aplicamos diferentes enfoques matemáticos. En el curso usaremos <strong>Vertex AI</strong> para esto.</p>
                     </div>
                     <div class="divide-y divide-slate-100">
                         <details class="group p-4 open:bg-blue-50/50 transition">
@@ -230,8 +281,8 @@
                             <div class="text-slate-600 mt-3 text-sm ml-6">
                                 Enseñamos al modelo con datos etiquetados (ej. fotos de gatos vs perros).
                                 <ul class="list-disc ml-4 mt-2 text-xs">
-                                    <li><strong>Clasificación:</strong> ¿Es A o B?</li>
-                                    <li><strong>Regresión:</strong> Predecir un valor numérico (precio de casa).</li>
+                                    <li><strong>Clasificación:</strong> ¿Es Correo Spam o No? (Gmail usa esto).</li>
+                                    <li><strong>Regresión:</strong> Predecir el precio de una casa.</li>
                                 </ul>
                             </div>
                         </details>
@@ -243,7 +294,7 @@
                             <div class="text-slate-600 mt-3 text-sm ml-6">
                                 El algoritmo encuentra patrones ocultos sin etiquetas previas.
                                 <ul class="list-disc ml-4 mt-2 text-xs">
-                                    <li><strong>K-Means:</strong> Agrupar clientes por comportamiento de compra.</li>
+                                    <li><strong>Ejemplo cotidiano:</strong> Spotify agrupando canciones para crear tu "Descubrimiento Semanal".</li>
                                 </ul>
                             </div>
                         </details>
@@ -255,8 +306,8 @@
                             <div class="text-slate-600 mt-3 text-sm ml-6">
                                 Técnicas para entender texto humano.
                                 <ul class="list-disc ml-4 mt-2 text-xs">
-                                    <li><strong>Análisis de Sentimiento:</strong> ¿El tweet es positivo o negativo?</li>
-                                    <li><strong>Chatbots:</strong> Como el que usas ahora.</li>
+                                    <li><strong>Google Translate:</strong> Traducir texto en tiempo real.</li>
+                                    <li><strong>Chatbots:</strong> Atención al cliente automatizada.</li>
                                 </ul>
                             </div>
                         </details>
@@ -271,27 +322,21 @@
                     <h2 class="text-2xl font-bold text-slate-800">Fuentes de Big Data</h2>
                 </div>
                 <div class="content-card p-6 bg-amber-50 border-amber-100">
-                    <div class="flex justify-around text-center">
-                        <div class="group">
-                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-2 text-amber-600 text-2xl group-hover:scale-110 transition">
-                                <i class="fas fa-users"></i>
-                            </div>
+                    <div class="flex flex-col md:flex-row justify-around text-center gap-6">
+                        <div class="group flex-1">
+                            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=200" class="w-20 h-20 rounded-full mx-auto mb-3 object-cover shadow-md group-hover:scale-110 transition" alt="Personas">
                             <p class="font-bold text-sm text-slate-700">Personas</p>
-                            <p class="text-[10px] text-slate-500">Redes sociales, emails, búsquedas.</p>
+                            <p class="text-[10px] text-slate-500">Tus likes en Instagram, búsquedas en Google, correos.</p>
                         </div>
-                        <div class="group">
-                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-2 text-amber-600 text-2xl group-hover:scale-110 transition">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <p class="font-bold text-sm text-slate-700">Máquinas (M2M)</p>
-                            <p class="text-[10px] text-slate-500">Sensores IoT, GPS, Logs de servidores.</p>
+                        <div class="group flex-1">
+                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=200" class="w-20 h-20 rounded-full mx-auto mb-3 object-cover shadow-md group-hover:scale-110 transition" alt="Máquinas">
+                            <p class="font-bold text-sm text-slate-700">Máquinas (IoT)</p>
+                            <p class="text-[10px] text-slate-500">Sensores de temperatura, GPS de Uber, Smartwatches.</p>
                         </div>
-                        <div class="group">
-                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-2 text-amber-600 text-2xl group-hover:scale-110 transition">
-                                <i class="fas fa-building"></i>
-                            </div>
+                        <div class="group flex-1">
+                            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=200" class="w-20 h-20 rounded-full mx-auto mb-3 object-cover shadow-md group-hover:scale-110 transition" alt="Organizaciones">
                             <p class="font-bold text-sm text-slate-700">Organizaciones</p>
-                            <p class="text-[10px] text-slate-500">Transacciones bancarias, inventarios.</p>
+                            <p class="text-[10px] text-slate-500">Registros bancarios, expedientes clínicos, inventarios.</p>
                         </div>
                     </div>
                 </div>
@@ -322,42 +367,48 @@
             <section id="1.8" class="scroll-mt-20">
                 <div class="flex items-center space-x-3 mb-4">
                     <span class="bg-cyan-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.8</span>
-                    <h2 class="text-2xl font-bold text-slate-800">Etapas del Proceso (Pipeline)</h2>
+                    <h2 class="text-2xl font-bold text-slate-800">Etapas del Proceso (Google Cloud)</h2>
                 </div>
                 <div class="relative py-4">
                     <div class="absolute top-1/2 left-0 w-full h-1 bg-slate-200 -z-10 transform -translate-y-1/2 hidden md:block"></div>
                     <div class="flex flex-col md:flex-row justify-between gap-4">
                         <!-- Step 1 -->
-                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5 transform hover:-translate-y-1 transition duration-300">
                             <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold mb-2">1</div>
                             <h4 class="font-bold text-sm">Ingesta</h4>
-                            <p class="text-xs text-center text-slate-500 mt-1">Recolección (Kafka, Flume)</p>
+                            <p class="text-xs text-center text-slate-500 mt-1">Recibir datos en vivo.</p>
+                            <span class="gcp-badge mt-2"><i class="fas fa-satellite-dish"></i> Pub/Sub</span>
                         </div>
                         <!-- Step 2 -->
-                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5 transform hover:-translate-y-1 transition duration-300">
                             <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold mb-2">2</div>
                             <h4 class="font-bold text-sm">Almacén</h4>
-                            <p class="text-xs text-center text-slate-500 mt-1">HDFS, S3, NoSQL</p>
+                            <p class="text-xs text-center text-slate-500 mt-1">Guardar archivos crudos.</p>
+                            <span class="gcp-badge mt-2"><i class="fas fa-box"></i> Cloud Storage</span>
                         </div>
                         <!-- Step 3 -->
-                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5 transform hover:-translate-y-1 transition duration-300">
                             <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold mb-2">3</div>
                             <h4 class="font-bold text-sm">Proceso</h4>
-                            <p class="text-xs text-center text-slate-500 mt-1">Limpieza y Transformación (Spark)</p>
+                            <p class="text-xs text-center text-slate-500 mt-1">Limpieza y ETL.</p>
+                            <span class="gcp-badge mt-2"><i class="fas fa-cogs"></i> Dataflow</span>
                         </div>
                         <!-- Step 4 -->
-                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5 transform hover:-translate-y-1 transition duration-300">
                             <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold mb-2">4</div>
                             <h4 class="font-bold text-sm">Análisis</h4>
-                            <p class="text-xs text-center text-slate-500 mt-1">Machine Learning, SQL</p>
+                            <p class="text-xs text-center text-slate-500 mt-1">Consultas SQL masivas.</p>
+                            <span class="gcp-badge mt-2"><i class="fas fa-search"></i> BigQuery</span>
                         </div>
                         <!-- Step 5 -->
-                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5 transform hover:-translate-y-1 transition duration-300">
                             <div class="w-8 h-8 bg-cyan-600 text-white rounded-full flex items-center justify-center font-bold mb-2"><i class="fas fa-check"></i></div>
                             <h4 class="font-bold text-sm">Visualización</h4>
-                            <p class="text-xs text-center text-slate-500 mt-1">PowerBI, Tableau</p>
+                            <p class="text-xs text-center text-slate-500 mt-1">Dashboards.</p>
+                            <span class="gcp-badge mt-2"><i class="fas fa-chart-pie"></i> Looker Studio</span>
                         </div>
                     </div>
+                    <p class="text-xs text-center text-slate-400 mt-6 italic">Este es el flujo que implementaremos en la Práctica 1.</p>
                 </div>
             </section>
 
@@ -371,7 +422,7 @@
                     <div class="content-card p-6 bg-slate-50">
                         <h3 class="font-bold text-lg mb-3 flex items-center"><i class="fas fa-balance-scale text-slate-600 mr-2"></i> Gobernanza de Datos</h3>
                         <p class="text-sm text-slate-600 mb-4">
-                            Es la gestión de la disponibilidad, integridad, usabilidad y seguridad de los datos.
+                            Es la gestión de la disponibilidad, integridad y seguridad. En GCP usamos <strong>IAM</strong> para permisos y <strong>Data Plex</strong> para gobernanza.
                         </p>
                         <ul class="text-xs space-y-2 text-slate-700">
                             <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-0.5"></i> <strong>Calidad:</strong> Datos limpios y fiables.</li>
@@ -380,14 +431,14 @@
                         </ul>
                     </div>
                     <div class="content-card p-6 bg-red-50 border-red-100">
-                        <h3 class="font-bold text-lg mb-3 flex items-center"><i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Problemática y Desafíos</h3>
+                        <h3 class="font-bold text-lg mb-3 flex items-center"><i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Problemática</h3>
                         <p class="text-sm text-slate-600 mb-4">
-                            No todo es perfecto. Implementar Big Data trae problemas técnicos y éticos.
+                            No todo es perfecto. Implementar Big Data trae problemas reales.
                         </p>
                         <ul class="text-xs space-y-2 text-slate-700">
-                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Escasez de talento especializado (Data Scientists).</li>
-                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Costos elevados de infraestructura.</li>
-                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Silos de datos desconectados.</li>
+                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Escasez de talento (Faltan Ingenieros de Datos).</li>
+                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Costos si no se optimiza la nube.</li>
+                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Datos sucios ("Garbage in, Garbage out").</li>
                         </ul>
                     </div>
                 </div>
@@ -401,12 +452,12 @@
                     <p class="text-indigo-200 mb-6 max-w-lg mx-auto">Responde esta pregunta rápida para validar tu asistencia virtual en esta unidad.</p>
                     
                     <div id="quiz-container" class="max-w-md mx-auto bg-white/10 backdrop-blur rounded-xl p-6 text-left">
-                        <p class="font-bold mb-4">¿Cuál de las siguientes NO es una de las 5 V's del Big Data?</p>
+                        <p class="font-bold mb-4">¿Qué herramienta de Google Cloud usaremos para realizar consultas SQL a gran escala (Análisis)?</p>
                         <div class="space-y-3">
-                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">A) Volumen</button>
-                            <button onclick="checkAnswer(this, true)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">B) Virtualización</button>
-                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">C) Veracidad</button>
-                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">D) Valor</button>
+                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">A) Cloud Storage</button>
+                            <button onclick="checkAnswer(this, true)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">B) BigQuery</button>
+                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">C) Pub/Sub</button>
+                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">D) Dataflow</button>
                         </div>
                         <div id="quiz-feedback" class="mt-4 text-center font-bold hidden"></div>
                     </div>
@@ -422,13 +473,13 @@
         // Inicializar Highlight.js
         hljs.highlightAll();
 
-        // Lógica para las 5 V's
+        // Lógica para las 5 V's (Actualizada con ejemplos cotidianos)
         const vData = {
-            volumen: { title: "Volumen", icon: "fa-hdd", color: "text-blue-500", desc: "La cantidad masiva de datos generados cada segundo. Hablamos de Zettabytes y Yottabytes." },
-            velocidad: { title: "Velocidad", icon: "fa-bolt", color: "text-amber-500", desc: "La rapidez con la que los datos se crean y se deben procesar. Streaming en tiempo real." },
-            variedad: { title: "Variedad", icon: "fa-layer-group", color: "text-purple-500", desc: "Diferentes formatos: estructurados, texto, audio, video, logs, etc." },
-            veracidad: { title: "Veracidad", icon: "fa-check-double", color: "text-emerald-500", desc: "La incertidumbre de los datos. ¿Son fiables? Hay que limpiar el 'ruido'." },
-            valor: { title: "Valor", icon: "fa-dollar-sign", color: "text-rose-500", desc: "La capacidad de convertir los datos en algo útil para el negocio. La V más importante." }
+            volumen: { title: "Volumen", icon: "fa-hdd", color: "text-blue-500", desc: "Ejemplo: Todos los videos subidos a YouTube cada minuto (500 horas de video)." },
+            velocidad: { title: "Velocidad", icon: "fa-bolt", color: "text-amber-500", desc: "Ejemplo: Waze recalculando tu ruta en tiempo real según el tráfico." },
+            variedad: { title: "Variedad", icon: "fa-layer-group", color: "text-purple-500", desc: "Ejemplo: Un post de Facebook tiene texto, imagen, ubicación y likes." },
+            veracidad: { title: "Veracidad", icon: "fa-check-double", color: "text-emerald-500", desc: "Ejemplo: Filtrar noticias falsas o bots en Twitter." },
+            valor: { title: "Valor", icon: "fa-dollar-sign", color: "text-rose-500", desc: "Ejemplo: Netflix ahorrando millones al saber qué series no cancelar." }
         };
 
         function showV(key) {
@@ -463,14 +514,14 @@
 
             if (isCorrect) {
                 btn.classList.add('bg-green-500', 'text-white');
-                feedback.innerHTML = '<span class="text-green-300"><i class="fas fa-check-circle"></i> ¡Correcto! La Virtualización es una tecnología, no una característica intrínseca de los datos.</span>';
+                feedback.innerHTML = '<span class="text-green-300"><i class="fas fa-check-circle"></i> ¡Correcto! BigQuery es el almacén de datos (Data Warehouse) serverless de Google para análisis.</span>';
                 feedback.classList.remove('hidden');
                 
                 // Efecto confetti simple (simulado con logica de progreso)
                 document.getElementById('progressBar').style.width = "100%";
             } else {
                 btn.classList.add('bg-red-500', 'text-white');
-                feedback.innerHTML = '<span class="text-red-300"><i class="fas fa-times-circle"></i> Incorrecto. Inténtalo de nuevo recargando la página.</span>';
+                feedback.innerHTML = '<span class="text-red-300"><i class="fas fa-times-circle"></i> Incorrecto. BigQuery es la respuesta. Recarga para intentar de nuevo.</span>';
                 feedback.classList.remove('hidden');
                 container.classList.add('shake');
             }
