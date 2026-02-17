@@ -262,55 +262,156 @@
                 </div>
             </section>
 
-            <!-- 1.4 y 1.5 Modelos, Tareas, Métodos y Técnicas -->
+            <!-- 1.4 Modelos y Tareas (Separado y Detallado) -->
             <section id="1.4" class="scroll-mt-20">
                 <div class="flex items-center space-x-3 mb-4">
-                    <span class="bg-slate-700 text-white w-auto px-2 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.4 - 1.5</span>
-                    <h2 class="text-2xl font-bold text-slate-800">Modelos, Tareas y Técnicas</h2>
+                    <span class="bg-teal-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.4</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Modelos y Tareas</h2>
                 </div>
-                <div class="content-card overflow-hidden">
-                    <div class="bg-slate-50 p-4 border-b">
-                        <p class="text-sm text-slate-600">Para extraer valor, aplicamos diferentes enfoques matemáticos. En el curso usaremos <strong>Vertex AI</strong> para esto.</p>
+                <div class="content-card p-6">
+                    <p class="text-slate-600 mb-6">
+                        En Big Data, definimos las tareas basándonos en la <strong>madurez analítica</strong>. No es lo mismo saber qué pasó ayer, que saber qué pasará mañana.
+                    </p>
+
+                    <!-- Acordeón de Modelos -->
+                    <div class="space-y-4">
+                        <!-- Descriptivo -->
+                        <div class="border border-slate-200 rounded-xl overflow-hidden">
+                            <div class="bg-slate-50 p-4 border-b border-slate-200">
+                                <h3 class="font-bold text-slate-800 flex items-center">
+                                    <span class="bg-teal-100 text-teal-700 text-xs px-2 py-1 rounded mr-3">Pasado</span>
+                                    1. Análisis Descriptivo (¿Qué pasó?)
+                                </h3>
+                            </div>
+                            <div class="p-4 text-sm text-slate-600">
+                                Es la base. Resume datos históricos para entender el estado actual.
+                                <ul class="mt-2 space-y-1 list-disc list-inside">
+                                    <li><strong>Ejemplo:</strong> Reporte de ventas mensuales o dashboard de visitas web.</li>
+                                    <li><strong>Tarea:</strong> Agregación, Filtrado, Visualización.</li>
+                                    <li class="mt-2"><span class="gcp-badge"><i class="fas fa-chart-line"></i> Looker Studio</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Predictivo -->
+                        <div class="border border-slate-200 rounded-xl overflow-hidden">
+                            <div class="bg-slate-50 p-4 border-b border-slate-200">
+                                <h3 class="font-bold text-slate-800 flex items-center">
+                                    <span class="bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded mr-3">Futuro</span>
+                                    2. Análisis Predictivo (¿Qué pasará?)
+                                </h3>
+                            </div>
+                            <div class="p-4 text-sm text-slate-600">
+                                Usa datos históricos y algoritmos para predecir eventos futuros con cierta probabilidad.
+                                <ul class="mt-2 space-y-1 list-disc list-inside">
+                                    <li><strong>Ejemplo:</strong> Predicción de demanda de inventario para Navidad.</li>
+                                    <li><strong>Tarea:</strong> Regresión, Series de Tiempo.</li>
+                                    <li class="mt-2"><span class="gcp-badge"><i class="fas fa-brain"></i> BigQuery ML</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Prescriptivo -->
+                        <div class="border border-slate-200 rounded-xl overflow-hidden">
+                            <div class="bg-slate-50 p-4 border-b border-slate-200">
+                                <h3 class="font-bold text-slate-800 flex items-center">
+                                    <span class="bg-rose-100 text-rose-700 text-xs px-2 py-1 rounded mr-3">Acción</span>
+                                    3. Análisis Prescriptivo (¿Qué debemos hacer?)
+                                </h3>
+                            </div>
+                            <div class="p-4 text-sm text-slate-600">
+                                No solo predice, sino que sugiere la mejor acción a tomar. Es el nivel más avanzado.
+                                <ul class="mt-2 space-y-1 list-disc list-inside">
+                                    <li><strong>Ejemplo:</strong> Waze no solo dice "hay tráfico" (Descriptivo) o "llegarás tarde" (Predictivo), sino que te cambia la ruta automáticamente (Prescriptivo).</li>
+                                    <li><strong>Tarea:</strong> Optimización, Simulación.</li>
+                                    <li class="mt-2"><span class="gcp-badge"><i class="fas fa-robot"></i> Vertex AI Optimization</span></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="divide-y divide-slate-100">
-                        <details class="group p-4 open:bg-blue-50/50 transition">
-                            <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-slate-800">
-                                <span><i class="fas fa-brain text-purple-500 mr-2"></i> Aprendizaje Supervisado</span>
-                                <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-slate-400"></i></span>
-                            </summary>
-                            <div class="text-slate-600 mt-3 text-sm ml-6">
-                                Enseñamos al modelo con datos etiquetados (ej. fotos de gatos vs perros).
-                                <ul class="list-disc ml-4 mt-2 text-xs">
-                                    <li><strong>Clasificación:</strong> ¿Es Correo Spam o No? (Gmail usa esto).</li>
-                                    <li><strong>Regresión:</strong> Predecir el precio de una casa.</li>
-                                </ul>
+                </div>
+            </section>
+
+            <!-- 1.5 Métodos y Técnicas (Separado y Detallado) -->
+            <section id="1.5" class="scroll-mt-20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-violet-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.5</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Métodos y Técnicas</h2>
+                </div>
+                <div class="content-card p-6">
+                    <p class="text-slate-600 mb-6">
+                        Aquí entramos en el "cómo". Estas son las técnicas matemáticas y algorítmicas (Machine Learning) que aplicamos a los datos.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Clasificación -->
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-3"><i class="fas fa-tags"></i></div>
+                                <h3 class="font-bold text-slate-800">Clasificación</h3>
                             </div>
-                        </details>
-                        <details class="group p-4 open:bg-blue-50/50 transition">
-                            <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-slate-800">
-                                <span><i class="fas fa-layer-group text-blue-500 mr-2"></i> Clustering (No Supervisado)</span>
-                                <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-slate-400"></i></span>
-                            </summary>
-                            <div class="text-slate-600 mt-3 text-sm ml-6">
-                                El algoritmo encuentra patrones ocultos sin etiquetas previas.
-                                <ul class="list-disc ml-4 mt-2 text-xs">
-                                    <li><strong>Ejemplo cotidiano:</strong> Spotify agrupando canciones para crear tu "Descubrimiento Semanal".</li>
-                                </ul>
+                            <p class="text-xs text-slate-600 mb-3">Asigna una etiqueta a un dato nuevo basándose en el aprendizaje previo.</p>
+                            <div class="bg-slate-900 rounded p-2 text-xs text-green-400 font-mono">
+                                input: Email<br>
+                                output: "Spam" o "No Spam"
                             </div>
-                        </details>
-                        <details class="group p-4 open:bg-blue-50/50 transition">
-                            <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-slate-800">
-                                <span><i class="fas fa-language text-pink-500 mr-2"></i> Procesamiento de Lenguaje Natural (NLP)</span>
-                                <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-slate-400"></i></span>
-                            </summary>
-                            <div class="text-slate-600 mt-3 text-sm ml-6">
-                                Técnicas para entender texto humano.
-                                <ul class="list-disc ml-4 mt-2 text-xs">
-                                    <li><strong>Google Translate:</strong> Traducir texto en tiempo real.</li>
-                                    <li><strong>Chatbots:</strong> Atención al cliente automatizada.</li>
-                                </ul>
+                        </div>
+
+                        <!-- Regresión -->
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mr-3"><i class="fas fa-chart-line"></i></div>
+                                <h3 class="font-bold text-slate-800">Regresión</h3>
                             </div>
-                        </details>
+                            <p class="text-xs text-slate-600 mb-3">Predice un valor numérico continuo.</p>
+                            <div class="bg-slate-900 rounded p-2 text-xs text-green-400 font-mono">
+                                input: Metros cuadrados, Zona<br>
+                                output: Precio Casa ($)
+                            </div>
+                        </div>
+
+                        <!-- Clustering -->
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mr-3"><i class="fas fa-object-group"></i></div>
+                                <h3 class="font-bold text-slate-800">Clustering (Agrupamiento)</h3>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">Agrupa datos similares sin etiquetas previas (No Supervisado).</p>
+                            <div class="bg-slate-900 rounded p-2 text-xs text-green-400 font-mono">
+                                input: Base de Clientes<br>
+                                output: Grupo A (Jóvenes), Grupo B (VIP)
+                            </div>
+                        </div>
+
+                        <!-- Reglas de Asociación -->
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mr-3"><i class="fas fa-shopping-basket"></i></div>
+                                <h3 class="font-bold text-slate-800">Reglas de Asociación</h3>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">Descubre relaciones ocultas entre variables ("Si compra A, compra B").</p>
+                            <div class="bg-slate-900 rounded p-2 text-xs text-green-400 font-mono">
+                                input: Tickets de Walmart<br>
+                                output: {Pañales} -> {Cerveza}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nota técnica GCP -->
+                    <div class="mt-6 bg-slate-100 p-4 rounded-xl border border-slate-200 flex items-start">
+                        <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">En Google Cloud:</h4>
+                            <p class="text-xs text-slate-600 mt-1">
+                                No necesitas ser un experto en matemáticas para usar esto. Con <strong>BigQuery ML</strong>, puedes crear un modelo de regresión usando SQL estándar:
+                            </p>
+                            <code class="block mt-2 text-xs bg-white p-2 rounded border border-slate-200 text-slate-700 font-mono">
+                                CREATE MODEL `prediccion_precios`<br>
+                                OPTIONS(model_type='linear_reg') AS<br>
+                                SELECT ...
+                            </code>
+                        </div>
                     </div>
                 </div>
             </section>
