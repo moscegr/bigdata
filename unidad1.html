@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad 1: Fundamentos de Big Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .gradient-sidebar {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-block {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .interactive-btn {
+            transition: all 0.2s;
+        }
+        .interactive-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Animaciones para feedback */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.3s; }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.3s; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR DE NAVEGACIÓN -->
+    <aside class="w-64 gradient-sidebar text-white flex-shrink-0 hidden md:flex flex-col h-full overflow-y-auto">
+        <div class="p-6 border-b border-slate-700">
+            <a href="index.html" class="flex items-center space-x-2 text-slate-400 hover:text-white transition mb-4 text-sm">
+                <i class="fas fa-arrow-left"></i>
+                <span>Volver al Inicio</span>
+            </a>
+            <h1 class="text-xl font-bold leading-tight">Unidad 1<br><span class="text-blue-400 text-sm font-normal">Introducción a Big Data</span></h1>
+        </div>
+        <nav class="flex-1 p-4 space-y-1">
+            <a href="#1.1" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.1 Definición y Características</a>
+            <a href="#1.2" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.2 Tipos de Datos</a>
+            <a href="#1.3" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.3 Áreas y Aplicaciones</a>
+            <a href="#1.4" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.4 Modelos y Tareas</a>
+            <a href="#1.5" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.5 Métodos y Técnicas</a>
+            <a href="#1.6" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.6 Fuentes de Big Data</a>
+            <a href="#1.7" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.7 Las 5 V's</a>
+            <a href="#1.8" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.8 Etapas del Proceso</a>
+            <a href="#1.9" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.9 Gobernanza</a>
+            <a href="#1.10" class="block px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition text-slate-300 hover:text-white">1.10 Problemática</a>
+        </nav>
+        <div class="p-4 border-t border-slate-700">
+            <div class="bg-blue-600/20 p-3 rounded-lg border border-blue-500/30">
+                <p class="text-xs text-blue-200">Progreso de la Unidad</p>
+                <div class="w-full bg-slate-700 h-1.5 rounded-full mt-2">
+                    <div class="bg-blue-500 h-1.5 rounded-full w-0 transition-all duration-1000" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 h-full overflow-y-auto scroll-smooth relative">
+        
+        <!-- Header Móvil -->
+        <div class="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-50">
+            <span class="font-bold">Unidad 1</span>
+            <a href="index.html" class="text-sm bg-slate-800 px-3 py-1 rounded">Volver</a>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-4 py-10 md:px-8 space-y-16">
+
+            <!-- 1.1 Definición y Características -->
+            <section id="1.1" class="scroll-mt-20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.1</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Definición y Características</h2>
+                </div>
+                <div class="content-card p-6">
+                    <p class="text-slate-600 mb-4">
+                        Big Data no es solo "muchos datos". Se refiere a conjuntos de datos cuyo <strong>volumen, velocidad o variedad</strong> es tan grande que dificulta su captura, gestión, procesamiento o análisis mediante tecnologías convencionales (como una base de datos SQL tradicional o Excel).
+                    </p>
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                        <p class="text-sm text-blue-800">
+                            <strong>Concepto clave:</strong> El umbral de Big Data es relativo y cambia con el tiempo. Lo que hoy es Big Data, mañana puede ser procesado por tu smartphone.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1.2 Tipos de Datos (Interactivo) -->
+            <section id="1.2" class="scroll-mt-20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.2</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Tipos de Datos</h2>
+                </div>
+                <div class="content-card p-6">
+                    <p class="text-slate-600 mb-6">En Big Data, raramente trabajamos con tablas perfectas. Clasificamos los datos en tres categorías:</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help" title="Tablas, Hojas de cálculo, Bases SQL">
+                            <div class="text-center mb-2"><i class="fas fa-table text-emerald-500 text-2xl"></i></div>
+                            <h3 class="font-bold text-center text-sm">Estructurados</h3>
+                            <p class="text-xs text-center text-slate-500 mt-1">Formato fijo (Filas/Columnas)</p>
+                        </div>
+                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help" title="HTML, XML, JSON, Emails">
+                            <div class="text-center mb-2"><i class="fas fa-code text-amber-500 text-2xl"></i></div>
+                            <h3 class="font-bold text-center text-sm">Semi-Estructurados</h3>
+                            <p class="text-xs text-center text-slate-500 mt-1">Tienen etiquetas pero no esquema rígido</p>
+                        </div>
+                        <div class="p-4 border rounded-xl hover:bg-slate-50 transition cursor-help" title="Video, Audio, Imágenes, PDF">
+                            <div class="text-center mb-2"><i class="fas fa-photo-video text-rose-500 text-2xl"></i></div>
+                            <h3 class="font-bold text-center text-sm">No Estructurados</h3>
+                            <p class="text-xs text-center text-slate-500 mt-1">Binarios o texto libre. El 80% de los datos.</p>
+                        </div>
+                    </div>
+
+                    <!-- Ejercicio Code Snippet -->
+                    <div class="bg-slate-900 rounded-xl p-4 text-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-slate-400 font-mono">ejemplo_datos.json (Semi-estructurado)</span>
+                            <span class="text-xs bg-slate-700 px-2 py-0.5 rounded text-slate-300">JSON</span>
+                        </div>
+<pre><code class="language-json">{
+  "sensor_id": "IoT-291",
+  "timestamp": "2026-02-15T14:30:00Z",
+  "lecturas": {
+    "temperatura": 24.5,
+    "vibracion": [0.1, 0.4, 0.0]
+  },
+  "estado": "ACTIVO"
+}</code></pre>
+                        <p class="text-xs text-slate-400 mt-2 border-t border-slate-700 pt-2">
+                            <i class="fas fa-info-circle mr-1"></i> Nota como los datos pueden anidar arrays y objetos, algo difícil en una tabla plana.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1.3 Áreas y Aplicaciones -->
+            <section id="1.3" class="scroll-mt-20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.3</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Áreas y Aplicaciones</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="content-card p-5 border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2">Marketing y Ventas</h3>
+                        <p class="text-sm text-slate-600">Segmentación de clientes, predicción de abandono (churn), recomendación de productos (Amazon/Netflix).</p>
+                    </div>
+                    <div class="content-card p-5 border-l-4 border-green-500">
+                        <h3 class="font-bold text-slate-800 mb-2">Salud</h3>
+                        <p class="text-sm text-slate-600">Análisis de genoma, predicción de epidemias, monitoreo de pacientes en tiempo real.</p>
+                    </div>
+                    <div class="content-card p-5 border-l-4 border-orange-500">
+                        <h3 class="font-bold text-slate-800 mb-2">Finanzas</h3>
+                        <p class="text-sm text-slate-600">Detección de fraude, análisis de riesgo crediticio, trading algorítmico de alta frecuencia.</p>
+                    </div>
+                    <div class="content-card p-5 border-l-4 border-purple-500">
+                        <h3 class="font-bold text-slate-800 mb-2">Deportes</h3>
+                        <p class="text-sm text-slate-600">Moneyball: Análisis de rendimiento de jugadores, prevención de lesiones mediante sensores.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1.4 y 1.5 Modelos, Tareas, Métodos y Técnicas -->
+            <section id="1.4" class="scroll-mt-20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-slate-700 text-white w-auto px-2 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.4 - 1.5</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Modelos, Tareas y Técnicas</h2>
+                </div>
+                <div class="content-card overflow-hidden">
+                    <div class="bg-slate-50 p-4 border-b">
+                        <p class="text-sm text-slate-600">Para extraer valor, aplicamos diferentes enfoques matemáticos y computacionales.</p>
+                    </div>
+                    <div class="divide-y divide-slate-100">
+                        <details class="group p-4 open:bg-blue-50/50 transition">
+                            <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-slate-800">
+                                <span><i class="fas fa-brain text-purple-500 mr-2"></i> Aprendizaje Supervisado</span>
+                                <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-slate-400"></i></span>
+                            </summary>
+                            <div class="text-slate-600 mt-3 text-sm ml-6">
+                                Enseñamos al modelo con datos etiquetados (ej. fotos de gatos vs perros).
+                                <ul class="list-disc ml-4 mt-2 text-xs">
+                                    <li><strong>Clasificación:</strong> ¿Es A o B?</li>
+                                    <li><strong>Regresión:</strong> Predecir un valor numérico (precio de casa).</li>
+                                </ul>
+                            </div>
+                        </details>
+                        <details class="group p-4 open:bg-blue-50/50 transition">
+                            <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-slate-800">
+                                <span><i class="fas fa-layer-group text-blue-500 mr-2"></i> Clustering (No Supervisado)</span>
+                                <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-slate-400"></i></span>
+                            </summary>
+                            <div class="text-slate-600 mt-3 text-sm ml-6">
+                                El algoritmo encuentra patrones ocultos sin etiquetas previas.
+                                <ul class="list-disc ml-4 mt-2 text-xs">
+                                    <li><strong>K-Means:</strong> Agrupar clientes por comportamiento de compra.</li>
+                                </ul>
+                            </div>
+                        </details>
+                        <details class="group p-4 open:bg-blue-50/50 transition">
+                            <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-slate-800">
+                                <span><i class="fas fa-language text-pink-500 mr-2"></i> Procesamiento de Lenguaje Natural (NLP)</span>
+                                <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-slate-400"></i></span>
+                            </summary>
+                            <div class="text-slate-600 mt-3 text-sm ml-6">
+                                Técnicas para entender texto humano.
+                                <ul class="list-disc ml-4 mt-2 text-xs">
+                                    <li><strong>Análisis de Sentimiento:</strong> ¿El tweet es positivo o negativo?</li>
+                                    <li><strong>Chatbots:</strong> Como el que usas ahora.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1.6 Fuentes de Big Data -->
+            <section id="1.6" class="scroll-mt-20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-amber-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.6</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Fuentes de Big Data</h2>
+                </div>
+                <div class="content-card p-6 bg-amber-50 border-amber-100">
+                    <div class="flex justify-around text-center">
+                        <div class="group">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-2 text-amber-600 text-2xl group-hover:scale-110 transition">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <p class="font-bold text-sm text-slate-700">Personas</p>
+                            <p class="text-[10px] text-slate-500">Redes sociales, emails, búsquedas.</p>
+                        </div>
+                        <div class="group">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-2 text-amber-600 text-2xl group-hover:scale-110 transition">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <p class="font-bold text-sm text-slate-700">Máquinas (M2M)</p>
+                            <p class="text-[10px] text-slate-500">Sensores IoT, GPS, Logs de servidores.</p>
+                        </div>
+                        <div class="group">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-2 text-amber-600 text-2xl group-hover:scale-110 transition">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <p class="font-bold text-sm text-slate-700">Organizaciones</p>
+                            <p class="text-[10px] text-slate-500">Transacciones bancarias, inventarios.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1.7 Las 5 V's (Esencial) -->
+            <section id="1.7" class="scroll-mt-20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-rose-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.7</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Las 5 V's de Big Data</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-center text-xs font-bold text-white mb-4">
+                    <div class="bg-blue-500 p-2 rounded cursor-pointer hover:opacity-90" onclick="showV('volumen')">VOLUMEN</div>
+                    <div class="bg-amber-500 p-2 rounded cursor-pointer hover:opacity-90" onclick="showV('velocidad')">VELOCIDAD</div>
+                    <div class="bg-purple-500 p-2 rounded cursor-pointer hover:opacity-90" onclick="showV('variedad')">VARIEDAD</div>
+                    <div class="bg-emerald-500 p-2 rounded cursor-pointer hover:opacity-90" onclick="showV('veracidad')">VERACIDAD</div>
+                    <div class="bg-rose-500 p-2 rounded cursor-pointer hover:opacity-90" onclick="showV('valor')">VALOR</div>
+                </div>
+
+                <div class="content-card p-8 text-center min-h-[200px] flex flex-col justify-center items-center" id="v-display">
+                    <i class="fas fa-hand-pointer text-4xl text-slate-300 mb-4 animate-bounce"></i>
+                    <p class="text-slate-500">Haz clic en los botones de arriba para ver el detalle de cada V.</p>
+                </div>
+            </section>
+
+            <!-- 1.8 Etapas en los Procesos -->
+            <section id="1.8" class="scroll-mt-20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-cyan-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.8</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Etapas del Proceso (Pipeline)</h2>
+                </div>
+                <div class="relative py-4">
+                    <div class="absolute top-1/2 left-0 w-full h-1 bg-slate-200 -z-10 transform -translate-y-1/2 hidden md:block"></div>
+                    <div class="flex flex-col md:flex-row justify-between gap-4">
+                        <!-- Step 1 -->
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                            <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold mb-2">1</div>
+                            <h4 class="font-bold text-sm">Ingesta</h4>
+                            <p class="text-xs text-center text-slate-500 mt-1">Recolección (Kafka, Flume)</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                            <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold mb-2">2</div>
+                            <h4 class="font-bold text-sm">Almacén</h4>
+                            <p class="text-xs text-center text-slate-500 mt-1">HDFS, S3, NoSQL</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                            <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold mb-2">3</div>
+                            <h4 class="font-bold text-sm">Proceso</h4>
+                            <p class="text-xs text-center text-slate-500 mt-1">Limpieza y Transformación (Spark)</p>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                            <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold mb-2">4</div>
+                            <h4 class="font-bold text-sm">Análisis</h4>
+                            <p class="text-xs text-center text-slate-500 mt-1">Machine Learning, SQL</p>
+                        </div>
+                        <!-- Step 5 -->
+                        <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow border border-slate-100 w-full md:w-1/5">
+                            <div class="w-8 h-8 bg-cyan-600 text-white rounded-full flex items-center justify-center font-bold mb-2"><i class="fas fa-check"></i></div>
+                            <h4 class="font-bold text-sm">Visualización</h4>
+                            <p class="text-xs text-center text-slate-500 mt-1">PowerBI, Tableau</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1.9 y 1.10 Gobernanza y Problemática -->
+            <section id="1.9" class="scroll-mt-20 pb-10">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-gray-800 text-white w-auto px-2 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1.9 - 1.10</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Gobernanza y Retos</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="content-card p-6 bg-slate-50">
+                        <h3 class="font-bold text-lg mb-3 flex items-center"><i class="fas fa-balance-scale text-slate-600 mr-2"></i> Gobernanza de Datos</h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            Es la gestión de la disponibilidad, integridad, usabilidad y seguridad de los datos.
+                        </p>
+                        <ul class="text-xs space-y-2 text-slate-700">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-0.5"></i> <strong>Calidad:</strong> Datos limpios y fiables.</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-0.5"></i> <strong>Seguridad:</strong> ¿Quién accede a qué?</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-0.5"></i> <strong>Privacidad:</strong> Cumplimiento legal (GDPR).</li>
+                        </ul>
+                    </div>
+                    <div class="content-card p-6 bg-red-50 border-red-100">
+                        <h3 class="font-bold text-lg mb-3 flex items-center"><i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Problemática y Desafíos</h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            No todo es perfecto. Implementar Big Data trae problemas técnicos y éticos.
+                        </p>
+                        <ul class="text-xs space-y-2 text-slate-700">
+                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Escasez de talento especializado (Data Scientists).</li>
+                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Costos elevados de infraestructura.</li>
+                            <li class="flex items-start"><i class="fas fa-times text-red-400 mr-2 mt-0.5"></i> Silos de datos desconectados.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EJERCICIO FINAL DE UNIDAD -->
+            <div class="border-t border-slate-200 pt-10">
+                <div class="bg-indigo-900 rounded-3xl p-8 text-center text-white relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full blur-3xl"></div>
+                    <h2 class="text-2xl font-bold mb-4">¡Comprueba tu conocimiento!</h2>
+                    <p class="text-indigo-200 mb-6 max-w-lg mx-auto">Responde esta pregunta rápida para validar tu asistencia virtual en esta unidad.</p>
+                    
+                    <div id="quiz-container" class="max-w-md mx-auto bg-white/10 backdrop-blur rounded-xl p-6 text-left">
+                        <p class="font-bold mb-4">¿Cuál de las siguientes NO es una de las 5 V's del Big Data?</p>
+                        <div class="space-y-3">
+                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">A) Volumen</button>
+                            <button onclick="checkAnswer(this, true)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">B) Virtualización</button>
+                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">C) Veracidad</button>
+                            <button onclick="checkAnswer(this, false)" class="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/20 transition border border-white/10 text-sm interactive-btn">D) Valor</button>
+                        </div>
+                        <div id="quiz-feedback" class="mt-4 text-center font-bold hidden"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h-20"></div> <!-- Espacio final -->
+
+        </div>
+    </main>
+
+    <script>
+        // Inicializar Highlight.js
+        hljs.highlightAll();
+
+        // Lógica para las 5 V's
+        const vData = {
+            volumen: { title: "Volumen", icon: "fa-hdd", color: "text-blue-500", desc: "La cantidad masiva de datos generados cada segundo. Hablamos de Zettabytes y Yottabytes." },
+            velocidad: { title: "Velocidad", icon: "fa-bolt", color: "text-amber-500", desc: "La rapidez con la que los datos se crean y se deben procesar. Streaming en tiempo real." },
+            variedad: { title: "Variedad", icon: "fa-layer-group", color: "text-purple-500", desc: "Diferentes formatos: estructurados, texto, audio, video, logs, etc." },
+            veracidad: { title: "Veracidad", icon: "fa-check-double", color: "text-emerald-500", desc: "La incertidumbre de los datos. ¿Son fiables? Hay que limpiar el 'ruido'." },
+            valor: { title: "Valor", icon: "fa-dollar-sign", color: "text-rose-500", desc: "La capacidad de convertir los datos en algo útil para el negocio. La V más importante." }
+        };
+
+        function showV(key) {
+            const data = vData[key];
+            const display = document.getElementById('v-display');
+            
+            // Animación simple de entrada
+            display.classList.remove('pop');
+            void display.offsetWidth; // Trigger reflow
+            display.classList.add('pop');
+
+            display.innerHTML = `
+                <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                    <i class="fas ${data.icon} ${data.color} text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-2">${data.title}</h3>
+                <p class="text-slate-600 max-w-md">${data.desc}</p>
+            `;
+        }
+
+        // Lógica del Quiz
+        function checkAnswer(btn, isCorrect) {
+            const feedback = document.getElementById('quiz-feedback');
+            const container = document.getElementById('quiz-container');
+            
+            // Reset estilos
+            const buttons = container.querySelectorAll('button');
+            buttons.forEach(b => {
+                b.classList.remove('bg-green-500', 'bg-red-500', 'text-white');
+                b.disabled = true;
+            });
+
+            if (isCorrect) {
+                btn.classList.add('bg-green-500', 'text-white');
+                feedback.innerHTML = '<span class="text-green-300"><i class="fas fa-check-circle"></i> ¡Correcto! La Virtualización es una tecnología, no una característica intrínseca de los datos.</span>';
+                feedback.classList.remove('hidden');
+                
+                // Efecto confetti simple (simulado con logica de progreso)
+                document.getElementById('progressBar').style.width = "100%";
+            } else {
+                btn.classList.add('bg-red-500', 'text-white');
+                feedback.innerHTML = '<span class="text-red-300"><i class="fas fa-times-circle"></i> Incorrecto. Inténtalo de nuevo recargando la página.</span>';
+                feedback.classList.remove('hidden');
+                container.classList.add('shake');
+            }
+        }
+
+        // Barra de progreso simulada al hacer scroll
+        const mainContent = document.querySelector('main');
+        mainContent.addEventListener('scroll', () => {
+            const winScroll = mainContent.scrollTop;
+            const height = mainContent.scrollHeight - mainContent.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            // Solo actualizamos si no se ha completado el quiz (que lo pone al 100%)
+            const bar = document.getElementById('progressBar');
+            if(bar.style.width !== "100%") {
+                bar.style.width = scrolled + "%";
+            }
+        });
+    </script>
+</body>
+</html>
