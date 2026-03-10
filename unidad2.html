@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad 2: Almacenes de Datos - Big Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .gradient-nav { background: linear-gradient(90deg, #1e1b4b 0%, #312e81 100%); }
+        
+        .content-card {
+            background: white;
+            border-radius: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .content-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+
+        .code-block { font-family: 'Courier New', Courier, monospace; }
+
+        .interactive-btn { transition: all 0.2s; }
+        .interactive-btn:active { transform: scale(0.95); }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.3s; }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.3s; }
+
+        .gcp-badge {
+            background-color: #e8f0fe; color: #1a73e8; border: 1px solid #d2e3fc;
+            padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700;
+            display: inline-flex; align-items: center;
+        }
+        .gcp-badge i { margin-right: 4px; }
+        
+        .python-badge {
+            background-color: #fef08a; color: #b45309; border: 1px solid #fde047;
+            padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700;
+            display: inline-flex; align-items: center;
+        }
+        .python-badge i { margin-right: 4px; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Diagrama DW CSS */
+        .dw-node { padding: 1rem; border-radius: 0.75rem; text-align: center; font-weight: bold; font-size: 0.8rem; }
+        .dw-line { flex: 1; height: 4px; background: #cbd5e1; position: relative; }
+        .dw-line::after { content: ''; position: absolute; right: 0; top: -4px; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 8px solid #cbd5e1; }
+        
+        /* Simulador GCP UI CSS */
+        .gcp-ui-container { font-family: Roboto, Arial, sans-serif; border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; background: #fff; }
+        .gcp-ui-header { background: #f8f9fa; border-bottom: 1px solid #dadce0; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; }
+        .gcp-ui-sidebar { background: #fff; border-right: 1px solid #dadce0; min-height: 250px; padding: 12px; font-size: 13px; color: #3c4043; }
+        .gcp-ui-btn { background: #1a73e8; color: white; border: none; padding: 6px 16px; border-radius: 4px; font-weight: 500; font-size: 13px; transition: background 0.2s; }
+        .gcp-ui-btn:hover { background: #1557b0; }
+        .gcp-ui-btn:disabled { background: #8ab4f8; cursor: not-allowed; }
+        .gcp-tree-item { cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; }
+        .gcp-tree-item:hover { background: #f1f3f4; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- BARRA DE NAVEGACIÓN SUPERIOR (TOPBAR) -->
+    <nav class="gradient-nav text-white sticky top-0 z-50 shadow-xl border-b border-indigo-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo / Volver -->
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <a href="index.html" class="text-indigo-200 hover:text-white transition bg-white/10 p-2 rounded-lg" title="Volver al índice">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="flex flex-col">
+                        <h1 class="font-bold text-lg leading-none">Unidad 2</h1>
+                        <span class="text-indigo-300 text-xs hidden sm:block">Almacenes de Datos</span>
+                    </div>
+                </div>
+
+                <!-- Links de Navegación (Desktop) -->
+                <div class="hidden lg:flex flex-1 mx-8 overflow-x-auto items-center space-x-2 no-scrollbar justify-center">
+                    <a href="#2.1" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-database mr-2"></i>2.1 DW</a>
+                    <a href="#2.2" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-exchange-alt mr-2"></i>2.2 OLTP</a>
+                    <a href="#2.3" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-chart-bar mr-2"></i>2.3 OLAP</a>
+                    <a href="#2.4" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fab fa-google mr-2"></i>2.4 UI GCP</a>
+                    <a href="#ejercicio" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-bold bg-indigo-500/30 border border-indigo-400/50 hover:bg-indigo-500/50 text-white transition"><i class="fas fa-gamepad mr-2"></i>Test</a>
+                </div>
+
+                <!-- Progreso y Menú Móvil -->
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <div class="hidden md:block w-32">
+                        <div class="flex justify-between text-[10px] text-indigo-200 mb-1">
+                            <span>Progreso</span>
+                            <span id="progressText">0%</span>
+                        </div>
+                        <div class="w-full bg-indigo-900 h-1.5 rounded-full">
+                            <div class="bg-indigo-400 h-1.5 rounded-full w-0 transition-all duration-1000" id="progressBar"></div>
+                        </div>
+                    </div>
+                    <button class="lg:hidden text-indigo-200 hover:text-white p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-indigo-950 border-t border-indigo-900 px-4 py-4 absolute w-full shadow-2xl">
+            <div class="flex flex-col gap-2 text-sm font-medium">
+                 <a href="#2.1" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.1 Bodegas de Datos (DW)</a>
+                 <a href="#2.2" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.2 Sistemas OLTP</a>
+                 <a href="#2.3" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.3 Sistemas OLAP</a>
+                 <a href="#2.4" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.4 Interfaz GCP</a>
+                 <a href="#ejercicio" class="px-3 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold" onclick="closeMenu()">Laboratorio Práctico</a>
+            </div>
+        </div>
+        
+        <div class="h-1 bg-indigo-900 md:hidden w-full absolute bottom-0 left-0">
+             <div class="bg-indigo-400 h-1 w-0 transition-all duration-1000" id="progressBarMobile"></div>
+        </div>
+    </nav>
+
+    <!-- HEADER DE UNIDAD -->
+    <header class="bg-white border-b border-slate-200 py-12 px-4 relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -mr-20 -mt-20 z-0"></div>
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-widest mb-4">
+                Soporte y Toma de Decisiones
+            </span>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Almacenes de Datos</h2>
+            <p class="text-slate-600 text-lg max-w-2xl mx-auto">
+                No podemos analizar datos si están dispersos en toda la empresa. Aprenderemos cómo centralizar la información y la diferencia crucial entre las bases de datos para operar (OLTP) y las bases de datos para analizar (OLAP).
+            </p>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="w-full">
+        <div class="max-w-4xl mx-auto px-4 py-12 space-y-20">
+
+            <!-- 2.1 Bodegas de Datos (Datawarehouse) -->
+            <section id="2.1" class="scroll-mt-24">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-indigo-200">2.1</span>
+                    <h2 class="text-3xl font-bold text-slate-800">Bodegas de Datos (Datawarehouse)</h2>
+                </div>
+                
+                <div class="content-card p-6 md:p-8">
+                    <p class="text-slate-600 mb-6 text-lg">
+                        Un <strong>Datawarehouse (DW)</strong> es un sistema centralizado que consolida datos de múltiples fuentes heterogéneas. Su propósito único es <strong>permitir consultas y análisis rápidos</strong> para la toma de decisiones empresariales.
+                    </p>
+
+                    <!-- Diagrama CSS -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-8 overflow-x-auto">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4 text-center">Arquitectura Conceptual</h3>
+                        <div class="flex items-center min-w-[600px] justify-between">
+                            <!-- Fuentes -->
+                            <div class="flex flex-col gap-2 w-1/4">
+                                <div class="dw-node bg-white border border-slate-300 shadow-sm"><i class="fas fa-shopping-cart text-blue-500 mr-2"></i>Ventas (MySQL)</div>
+                                <div class="dw-node bg-white border border-slate-300 shadow-sm"><i class="fab fa-facebook text-blue-600 mr-2"></i>RRSS (JSON)</div>
+                                <div class="dw-node bg-white border border-slate-300 shadow-sm"><i class="fas fa-file-invoice text-green-500 mr-2"></i>CRM (CSV)</div>
+                            </div>
+                            
+                            <div class="dw-line"></div>
+                            
+                            <!-- ETL -->
+                            <div class="dw-node bg-amber-100 text-amber-800 border border-amber-300 w-1/5 shadow-md">
+                                <i class="fas fa-cogs text-xl mb-1 block"></i>
+                                E. T. L.<br><span class="text-[10px] font-normal">(Extraer, Transformar, Cargar)</span>
+                            </div>
+                            
+                            <div class="dw-line"></div>
+                            
+                            <!-- Datawarehouse -->
+                            <div class="dw-node bg-indigo-600 text-white border border-indigo-800 w-1/4 shadow-xl transform scale-110">
+                                <i class="fas fa-database text-3xl mb-2 block text-indigo-200"></i>
+                                DATA WAREHOUSE<br>
+                                <span class="gcp-badge mt-2 bg-white/20 text-white border-none"><i class="fab fa-google"></i> BigQuery</span>
+                            </div>
+                            
+                            <div class="dw-line"></div>
+                            
+                            <!-- BI -->
+                            <div class="dw-node bg-emerald-100 text-emerald-800 border border-emerald-300 w-1/6 shadow-md">
+                                <i class="fas fa-chart-pie text-xl mb-1 block"></i>
+                                B. I.<br><span class="text-[10px] font-normal">(Dashboards)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Código Python / GCP -->
+                    <h3 class="font-bold text-slate-800 mb-3"><i class="fas fa-laptop-code text-indigo-500 mr-2"></i>Implementación en GCP con Python</h3>
+                    <p class="text-sm text-slate-600 mb-3">En Google Cloud, nuestro Datawarehouse es <strong>BigQuery</strong>. Así es como cargaríamos datos crudos hacia el DW usando el SDK de Python:</p>
+                    
+                    <div class="bg-[#282c34] rounded-xl overflow-hidden shadow-lg border border-slate-700">
+                        <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
+                            <span class="python-badge"><i class="fab fa-python"></i> python</span>
+                            <span class="text-xs text-slate-400 font-mono">cargar_dw.py</span>
+                        </div>
+<pre><code class="language-python">from google.cloud import bigquery
+
+# 1. Conectar al Datawarehouse (BigQuery)
+client = bigquery.Client(project='mi-proyecto-123')
+
+# 2. Definir la tabla destino en el DW
+table_id = "mi-proyecto-123.ventas_dataset.historico_ventas"
+
+# 3. Configurar el trabajo (Ej. cargar desde un archivo local o Cloud Storage)
+job_config = bigquery.LoadJobConfig(
+    source_format=bigquery.SourceFormat.CSV,
+    skip_leading_rows=1,
+    autodetect=True, # Infiere las columnas automáticamente
+)
+
+# 4. Ejecutar la carga (Fase 'Load' del ETL)
+with open("ventas_2025.csv", "rb") as source_file:
+    job = client.load_table_from_file(source_file, table_id, job_config=job_config)
+
+job.result()  # Esperar a que termine
+print(f"¡Carga exitosa! Hay {client.get_table(table_id).num_rows} filas en el Datawarehouse.")</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2.2 OLTP -->
+            <section id="2.2" class="scroll-mt-24">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-emerald-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-emerald-200">2.2</span>
+                    <h2 class="text-3xl font-bold text-slate-800">Procesamiento de Transacciones en Línea (OLTP)</h2>
+                </div>
+                
+                <div class="content-card p-6 md:p-8 border-t-4 border-emerald-500">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="bg-emerald-100 text-emerald-600 p-3 rounded-full text-2xl">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-600">
+                                <strong>OLTP (Online Transaction Processing)</strong> es el sistema del "día a día". Controla las operaciones cotidianas en tiempo real: una compra en Amazon, un retiro de cajero automático, un registro médico.
+                            </p>
+                            <p class="text-sm text-emerald-700 font-bold mt-2">Su objetivo es la Velocidad de Escritura y la Integridad (ACID).</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-200">
+                            <div class="font-black text-emerald-600 text-lg">A</div>
+                            <div class="text-xs font-bold">Atomicidad</div>
+                            <div class="text-[10px] text-slate-500">Todo o nada</div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-200">
+                            <div class="font-black text-emerald-600 text-lg">C</div>
+                            <div class="text-xs font-bold">Consistencia</div>
+                            <div class="text-[10px] text-slate-500">Reglas válidas</div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-200">
+                            <div class="font-black text-emerald-600 text-lg">I</div>
+                            <div class="text-xs font-bold">Aislamiento</div>
+                            <div class="text-[10px] text-slate-500">Independientes</div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-200">
+                            <div class="font-black text-emerald-600 text-lg">D</div>
+                            <div class="text-xs font-bold">Durabilidad</div>
+                            <div class="text-[10px] text-slate-500">No se borra</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-100 rounded-xl p-5 border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-sm mb-3">Ejemplo de consulta OLTP (Cloud SQL - MySQL)</h4>
+                        <p class="text-xs text-slate-600 mb-2">Busca un registro específico muy rápido por su ID (Lectura de 1 fila) o inserta una venta.</p>
+                        <div class="bg-[#282c34] rounded-lg p-3">
+<pre><code class="language-sql">-- El usuario da clic en "Comprar"
+START TRANSACTION;
+
+INSERT INTO ordenes (id_cliente, total, fecha) 
+VALUES (4589, 1200.50, NOW());
+
+UPDATE inventario 
+SET stock = stock - 1 
+WHERE id_producto = 'LAPTOP-01';
+
+COMMIT; -- Cumple propiedades ACID</code></pre>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-500">Herramientas GCP:</span>
+                            <div class="space-x-2">
+                                <span class="gcp-badge"><i class="fas fa-database"></i> Cloud SQL</span>
+                                <span class="gcp-badge"><i class="fas fa-globe"></i> Cloud Spanner</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2.3 OLAP -->
+            <section id="2.3" class="scroll-mt-24">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-blue-200">2.3</span>
+                    <h2 class="text-3xl font-bold text-slate-800">Procesamiento y Análisis en Línea (OLAP)</h2>
+                </div>
+                
+                <div class="content-card p-6 md:p-8 border-t-4 border-blue-500">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full text-2xl">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-600">
+                                <strong>OLAP (Online Analytical Processing)</strong> es el sistema del "gerente". Analiza volúmenes masivos de datos históricos para responder preguntas complejas de negocio. Funciona sobre el Datawarehouse.
+                            </p>
+                            <p class="text-sm text-blue-700 font-bold mt-2">Su objetivo es la Velocidad de Lectura Masiva (Agrupaciones/Filtros).</p>
+                        </div>
+                    </div>
+
+                    <!-- Visualización Columnar -->
+                    <div class="mb-8">
+                        <h4 class="font-bold text-slate-800 text-sm mb-3">El secreto de OLAP: Almacenamiento Columnar</h4>
+                        <p class="text-xs text-slate-600 mb-3">A diferencia de OLTP que guarda por filas, OLAP guarda por columnas. Esto permite sumar millones de precios en segundos sin leer nombres o direcciones.</p>
+                        <div class="flex gap-4 opacity-80">
+                            <div class="bg-slate-100 border border-slate-300 rounded p-2 text-center flex-1">
+                                <div class="bg-blue-500 text-white text-xs font-bold py-1 rounded mb-1">Total_Venta ($)</div>
+                                <div class="text-xs text-slate-500">1200.50<br>30.00<br>450.99<br>...<br>(Millones contiguos)</div>
+                            </div>
+                            <div class="bg-slate-100 border border-slate-300 rounded p-2 text-center flex-1">
+                                <div class="bg-slate-400 text-white text-xs font-bold py-1 rounded mb-1">Region</div>
+                                <div class="text-xs text-slate-500">Norte<br>Sur<br>Norte<br>...<br>(Ignorado si no se usa)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-100 rounded-xl p-5 border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-sm mb-3">Ejemplo de consulta OLAP (BigQuery)</h4>
+                        <p class="text-xs text-slate-600 mb-2">Lee millones de registros, los agrupa y calcula promedios (Analítica pesada).</p>
+                        <div class="bg-[#282c34] rounded-lg p-3">
+<pre><code class="language-sql">-- El gerente quiere ver tendencias anuales
+SELECT 
+    EXTRACT(MONTH FROM fecha) AS mes,
+    categoria,
+    SUM(total) AS ingresos_totales,
+    AVG(total) AS ticket_promedio
+FROM `historico_ventas`
+WHERE EXTRACT(YEAR FROM fecha) = 2025
+GROUP BY mes, categoria
+ORDER BY ingresos_totales DESC;</code></pre>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-500">Herramientas GCP:</span>
+                            <div class="space-x-2">
+                                <span class="gcp-badge"><i class="fas fa-search"></i> BigQuery</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2.4 NUEVO: Ejercicio de Interfaz Gráfica GCP -->
+            <section id="2.4" class="scroll-mt-24">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-blue-800 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-blue-200"><i class="fab fa-google"></i></span>
+                    <h2 class="text-3xl font-bold text-slate-800">Práctica: Consola de BigQuery (Google Cloud)</h2>
+                </div>
+
+                <div class="content-card p-6 md:p-8">
+                    <p class="text-slate-600 mb-6">
+                        Antes de escribir código Python, la forma más rápida de interactuar con nuestro Datawarehouse (OLAP) es mediante la consola web de GCP. Aquí tienes una simulación de cómo se ve y cómo ejecutaríamos la consulta vista en el tema anterior.
+                    </p>
+
+                    <!-- SIMULADOR INTERFAZ GCP -->
+                    <div class="gcp-ui-container shadow-xl">
+                        <!-- GCP Header -->
+                        <div class="gcp-ui-header">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-search text-blue-600 text-lg"></i>
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-800 leading-tight">BigQuery Workspace</h4>
+                                    <span class="text-[10px] text-slate-500">Proyecto: e-commerce-latam-2026</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs text-slate-500 hidden sm:block"><i class="fas fa-check-circle text-green-500 mr-1"></i>Esta consulta procesará 2.4 GB.</span>
+                                <button class="gcp-ui-btn flex items-center" id="btn-run-bq" onclick="runGcpQuery()">
+                                    <i class="fas fa-play mr-2 text-xs"></i> EJECUTAR
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row">
+                            <!-- Sidebar GCP -->
+                            <div class="gcp-ui-sidebar w-full md:w-1/4 hidden md:block">
+                                <p class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide">Explorador</p>
+                                <div class="gcp-tree-item"><i class="fas fa-project-diagram text-slate-400 mr-2"></i> e-commerce-latam</div>
+                                <div class="pl-4">
+                                    <div class="gcp-tree-item"><i class="fas fa-database text-blue-500 mr-2"></i> dataset_ventas</div>
+                                    <div class="pl-4">
+                                        <div class="gcp-tree-item bg-blue-50 text-blue-700 font-bold"><i class="fas fa-table text-slate-400 mr-2"></i> historico_ventas</div>
+                                        <div class="gcp-tree-item"><i class="fas fa-table text-slate-400 mr-2"></i> clientes_crm</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Área Principal -->
+                            <div class="w-full md:w-3/4 flex flex-col">
+                                <!-- Editor SQL -->
+                                <div class="p-4 bg-white border-b border-slate-200">
+                                    <div class="bg-slate-50 rounded border border-slate-200 p-3 text-sm font-mono text-blue-700 leading-relaxed overflow-x-auto">
+                                        <span class="text-purple-600 font-bold">SELECT</span><br>
+                                        &nbsp;&nbsp;categoria,<br>
+                                        &nbsp;&nbsp;<span class="text-purple-600 font-bold">SUM</span>(total) <span class="text-purple-600 font-bold">AS</span> ingresos_totales<br>
+                                        <span class="text-purple-600 font-bold">FROM</span> `e-commerce-latam.dataset_ventas.historico_ventas`<br>
+                                        <span class="text-purple-600 font-bold">GROUP BY</span> categoria<br>
+                                        <span class="text-purple-600 font-bold">ORDER BY</span> ingresos_totales <span class="text-purple-600 font-bold">DESC</span>;
+                                    </div>
+                                </div>
+
+                                <!-- Resultados (Ocultos al inicio) -->
+                                <div id="gcp-results-area" class="p-4 bg-white min-h-[150px] flex items-center justify-center text-slate-400 text-sm">
+                                    Haz clic en "EJECUTAR" para ver los resultados de la consulta OLAP.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded text-sm text-slate-700">
+                        <i class="fas fa-info-circle text-blue-500 mr-2"></i> <strong>Nota para el laboratorio real:</strong> En BigQuery (OLAP) no necesitas configurar índices ni preocuparte por el tamaño del servidor. Cobran por Gigabyte escaneado, no por tener el servidor encendido. ¡Por eso es vital usar <code>LIMIT</code> cuando pruebas consultas!
+                    </div>
+                </div>
+            </section>
+
+            <!-- EJERCICIO INTERACTIVO: El Reto OLTP vs OLAP -->
+            <section id="ejercicio" class="scroll-mt-24 pb-10">
+                <div class="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-center relative overflow-hidden shadow-2xl">
+                    <!-- Decoración fondo -->
+                    <div class="absolute top-0 left-0 w-full h-full opacity-10">
+                        <div class="absolute top-10 left-10 w-32 h-32 bg-emerald-500 rounded-full blur-3xl"></div>
+                        <div class="absolute bottom-10 right-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <span class="inline-block py-1 px-3 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-4 border border-white/20">
+                            Cuestionario Final
+                        </span>
+                        <h2 class="text-3xl font-extrabold text-white mb-2">¿Es OLTP u OLAP?</h2>
+                        <p class="text-slate-400 mb-8 max-w-lg mx-auto">Lee el escenario del mundo real y decide qué tipo de base de datos deberíamos utilizar para resolverlo.</p>
+
+                        <!-- Tarjeta de Juego -->
+                        <div class="bg-white rounded-2xl p-6 max-w-md mx-auto shadow-xl transition-all duration-300" id="game-card">
+                            <div class="text-slate-400 text-xs font-bold tracking-widest mb-4 uppercase" id="game-counter">Escenario 1 de 4</div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-6 min-h-[80px] flex items-center justify-center" id="game-question">
+                                "Un cliente está en el cajero automático y solicita retirar $2,000 MXN. El sistema debe verificar saldo y descontarlo inmediatamente."
+                            </h3>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="checkGameAnswer('OLTP')" class="bg-emerald-50 hover:bg-emerald-500 hover:text-white text-emerald-700 border border-emerald-200 font-bold py-3 px-4 rounded-xl transition interactive-btn flex flex-col items-center">
+                                    <i class="fas fa-bolt text-2xl mb-1"></i>
+                                    OLTP
+                                </button>
+                                <button onclick="checkGameAnswer('OLAP')" class="bg-blue-50 hover:bg-blue-500 hover:text-white text-blue-700 border border-blue-200 font-bold py-3 px-4 rounded-xl transition interactive-btn flex flex-col items-center">
+                                    <i class="fas fa-chart-pie text-2xl mb-1"></i>
+                                    OLAP
+                                </button>
+                            </div>
+                            
+                            <!-- Feedback -->
+                            <div id="game-feedback" class="mt-6 p-4 rounded-lg hidden text-sm font-bold animate-pop"></div>
+                            
+                            <button id="next-btn" onclick="nextQuestion()" class="mt-4 w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl hidden transition">
+                                Siguiente Escenario <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-white py-10 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-700 p-2 rounded-lg"><i class="fas fa-university text-white text-sm"></i></div>
+                <div>
+                    <h3 class="text-base font-bold tracking-tight leading-none">Ingeniería en Informática</h3>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Especialidad en TI</p>
+                </div>
+            </div>
+            <div class="text-center md:text-right">
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">© 2026 Big Data - Unidad 2</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Inicializar Highlight.js
+        hljs.highlightAll();
+
+        // Lógica de Barra de Progreso
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            const bar = document.getElementById('progressBar');
+            const barMobile = document.getElementById('progressBarMobile');
+            const text = document.getElementById('progressText');
+            
+            if(bar.style.width !== "100%") {
+                const widthVal = scrolled + "%";
+                bar.style.width = widthVal;
+                barMobile.style.width = widthVal;
+                text.innerText = Math.round(scrolled) + "%";
+            }
+        });
+
+        // Cerrar menú móvil
+        function closeMenu() { document.getElementById('mobile-menu').classList.add('hidden'); }
+
+        // --- Lógica del Simulador de Interfaz BigQuery (NUEVO) ---
+        function runGcpQuery() {
+            const btn = document.getElementById('btn-run-bq');
+            const resArea = document.getElementById('gcp-results-area');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> EJECUTANDO...';
+            
+            // Estado de carga simulado
+            resArea.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-4">
+                    <i class="fas fa-spinner fa-spin text-3xl text-blue-500 mb-3"></i>
+                    <p class="text-slate-600 text-sm font-medium">Buscando en nodos de almacenamiento (Slot 1 - 200)...</p>
+                </div>
+            `;
+            
+            // Resultado simulado después de 2 segundos
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-play mr-2 text-xs"></i> EJECUTAR';
+                btn.disabled = false;
+                
+                resArea.innerHTML = `
+                    <div class="w-full">
+                        <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
+                            <span class="text-xs font-bold text-green-600"><i class="fas fa-check mr-1"></i> Consulta completa (1.2 seg en transcurrir, 2.4 GB procesados)</span>
+                            <span class="text-xs text-slate-400 hover:text-blue-500 cursor-pointer"><i class="fas fa-download mr-1"></i> Exportar a CSV</span>
+                        </div>
+                        <table class="w-full text-sm text-left border-collapse">
+                            <thead class="bg-slate-50 text-slate-600">
+                                <tr>
+                                    <th class="p-2 border border-slate-200">Fila</th>
+                                    <th class="p-2 border border-slate-200">categoria</th>
+                                    <th class="p-2 border border-slate-200 text-right">ingresos_totales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2 border border-slate-200 text-slate-400">1</td>
+                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Electrónica</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">$ 1,450,200.00</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2 border border-slate-200 text-slate-400">2</td>
+                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Línea Blanca</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">$ 890,150.50</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2 border border-slate-200 text-slate-400">3</td>
+                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Moda</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">$ 450,900.25</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }, 2000);
+        }
+
+
+        // --- Lógica del Laboratorio OLTP vs OLAP ---
+        const gameData = [
+            {
+                q: '"Un cliente está en el cajero automático y solicita retirar $2,000. El sistema debe verificar el saldo y descontarlo inmediatamente."',
+                a: 'OLTP',
+                reason: 'Es una operación transaccional crítica (ACID), afecta un solo registro en tiempo real.'
+            },
+            {
+                q: '"El CEO pide un reporte de las ventas promedio trimestrales agrupadas por país de los últimos 5 años."',
+                a: 'OLAP',
+                reason: 'Requiere escanear millones de filas históricas, agrupar y calcular agregaciones. Clásico Datawarehouse.'
+            },
+            {
+                q: '"Un sensor de IoT en un camión de reparto envía sus coordenadas GPS cada 3 segundos a la base de datos central."',
+                a: 'OLTP',
+                reason: 'Son inserciones continuas, pequeñas y rápidas (Alta concurrencia de escritura).'
+            },
+            {
+                q: '"El equipo de Marketing ejecuta un modelo de Machine Learning en Vertex AI para segmentar a los clientes según su historial de compras de 2020 a 2025 guardado en BigQuery."',
+                a: 'OLAP',
+                reason: 'Machine Learning requiere datos masivos históricos y consolidados (Lectura masiva).'
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function renderQuestion() {
+            document.getElementById('game-counter').innerText = `Escenario ${currentQuestion + 1} de ${gameData.length}`;
+            document.getElementById('game-question').innerText = gameData[currentQuestion].q;
+            document.getElementById('game-feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            // Reactivar botones
+            const btns = document.querySelectorAll('#game-card button.interactive-btn');
+            btns.forEach(btn => {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            });
+        }
+
+        function checkGameAnswer(answer) {
+            const data = gameData[currentQuestion];
+            const feedbackBox = document.getElementById('game-feedback');
+            const btns = document.querySelectorAll('#game-card button.interactive-btn');
+            
+            // Desactivar botones
+            btns.forEach(btn => btn.disabled = true);
+
+            feedbackBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+            
+            // Trigger animation
+            feedbackBox.classList.remove('animate-pop');
+            void feedbackBox.offsetWidth;
+            feedbackBox.classList.add('animate-pop');
+
+            if (answer === data.a) {
+                score++;
+                feedbackBox.classList.add('bg-green-100', 'text-green-800');
+                feedbackBox.innerHTML = `<i class="fas fa-check-circle mr-2"></i> ¡Correcto! Es <strong>${data.a}</strong>. <br><span class="text-xs font-normal mt-1 block text-green-700">${data.reason}</span>`;
+            } else {
+                feedbackBox.classList.add('bg-red-100', 'text-red-800');
+                document.getElementById('game-card').classList.add('shake');
+                setTimeout(() => document.getElementById('game-card').classList.remove('shake'), 400);
+                feedbackBox.innerHTML = `<i class="fas fa-times-circle mr-2"></i> Incorrecto. La respuesta era <strong>${data.a}</strong>. <br><span class="text-xs font-normal mt-1 block text-red-700">${data.reason}</span>`;
+            }
+
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < gameData.length) {
+                renderQuestion();
+            } else {
+                // Final del juego
+                document.getElementById('game-counter').innerText = "¡Completado!";
+                document.getElementById('game-question').innerHTML = `
+                    <div class="text-center">
+                        <div class="text-5xl font-black text-indigo-600 mb-2">${score}/${gameData.length}</div>
+                        <p class="text-sm text-slate-500">Puntuación Final</p>
+                    </div>
+                `;
+                document.querySelector('#game-card .grid').style.display = 'none';
+                document.getElementById('game-feedback').classList.add('hidden');
+                
+                const btn = document.getElementById('next-btn');
+                btn.innerHTML = '<i class="fas fa-redo mr-2"></i> Volver a intentar';
+                btn.onclick = () => {
+                    currentQuestion = 0;
+                    score = 0;
+                    document.querySelector('#game-card .grid').style.display = 'grid';
+                    renderQuestion();
+                    btn.onclick = nextQuestion; // restaurar evento original
+                };
+                
+                // Set progress to 100%
+                document.getElementById('progressBar').style.width = "100%";
+                document.getElementById('progressText').innerText = "100%";
+            }
+        }
+    </script>
+</body>
+</html>
