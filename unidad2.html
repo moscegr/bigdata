@@ -107,6 +107,7 @@
                     <a href="#2.2" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-exchange-alt mr-2"></i>2.2 OLTP</a>
                     <a href="#2.3" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-chart-bar mr-2"></i>2.3 OLAP</a>
                     <a href="#2.4" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fab fa-google mr-2"></i>2.4 UI GCP</a>
+                    <a href="#2.5" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-code mr-2"></i>2.5 Retos</a>
                     <a href="#ejercicio" class="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-bold bg-indigo-500/30 border border-indigo-400/50 hover:bg-indigo-500/50 text-white transition"><i class="fas fa-gamepad mr-2"></i>Test</a>
                 </div>
 
@@ -129,17 +130,18 @@
         </div>
 
         <!-- Menú Móvil -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-indigo-950 border-t border-indigo-900 px-4 py-4 absolute w-full shadow-2xl">
+        <div id="mobile-menu" class="hidden lg:hidden bg-indigo-950 border-t border-indigo-900 px-4 py-4 absolute w-full shadow-2xl z-50">
             <div class="flex flex-col gap-2 text-sm font-medium">
                  <a href="#2.1" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.1 Bodegas de Datos (DW)</a>
                  <a href="#2.2" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.2 Sistemas OLTP</a>
                  <a href="#2.3" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.3 Sistemas OLAP</a>
                  <a href="#2.4" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.4 Interfaz GCP</a>
-                 <a href="#ejercicio" class="px-3 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold" onclick="closeMenu()">Laboratorio Práctico</a>
+                 <a href="#2.5" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100" onclick="closeMenu()">2.5 Retos Prácticos</a>
+                 <a href="#ejercicio" class="px-3 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold" onclick="closeMenu()">Laboratorio Práctico (Test)</a>
             </div>
         </div>
         
-        <div class="h-1 bg-indigo-900 md:hidden w-full absolute bottom-0 left-0">
+        <div class="h-1 bg-indigo-900 md:hidden w-full absolute bottom-0 left-0 z-50">
              <div class="bg-indigo-400 h-1 w-0 transition-all duration-1000" id="progressBarMobile"></div>
         </div>
     </nav>
@@ -219,7 +221,7 @@
                     <div class="bg-[#282c34] rounded-xl overflow-hidden shadow-lg border border-slate-700">
                         <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
                             <span class="python-badge"><i class="fab fa-python"></i> python</span>
-                            <span class="text-xs text-slate-400 font-mono">cargar_dw.py</span>
+                            <span class="text-xs text-slate-400 font-mono">cargar_personas_dw.py</span>
                         </div>
 <pre><code class="language-python">from google.cloud import bigquery
 
@@ -227,7 +229,7 @@
 client = bigquery.Client(project='mi-proyecto-123')
 
 # 2. Definir la tabla destino en el DW
-table_id = "mi-proyecto-123.ventas_dataset.historico_ventas"
+table_id = "mi-proyecto-123.dataset_personas.directorio_nacional"
 
 # 3. Configurar el trabajo (Ej. cargar desde un archivo local o Cloud Storage)
 job_config = bigquery.LoadJobConfig(
@@ -237,11 +239,11 @@ job_config = bigquery.LoadJobConfig(
 )
 
 # 4. Ejecutar la carga (Fase 'Load' del ETL)
-with open("ventas_2025.csv", "rb") as source_file:
+with open("datos_personas.csv", "rb") as source_file:
     job = client.load_table_from_file(source_file, table_id, job_config=job_config)
 
 job.result()  # Esperar a que termine
-print(f"¡Carga exitosa! Hay {client.get_table(table_id).num_rows} filas en el Datawarehouse.")</code></pre>
+print(f"¡Carga exitosa! Hay {client.get_table(table_id).num_rows} personas en el Datawarehouse.")</code></pre>
                     </div>
                 </div>
             </section>
@@ -289,19 +291,19 @@ print(f"¡Carga exitosa! Hay {client.get_table(table_id).num_rows} filas en el D
                         </div>
                     </div>
 
-                    <div class="bg-slate-100 rounded-xl p-5 border border-slate-200">
+                    <div class="bg-slate-100 rounded-xl p-5 border border-slate-200 mb-6">
                         <h4 class="font-bold text-slate-800 text-sm mb-3">Ejemplo de consulta OLTP (Cloud SQL - MySQL)</h4>
-                        <p class="text-xs text-slate-600 mb-2">Busca un registro específico muy rápido por su ID (Lectura de 1 fila) o inserta una venta.</p>
+                        <p class="text-xs text-slate-600 mb-2">Busca o inserta un registro específico muy rápido por su ID. Ideal para registrar una nueva persona en el sistema.</p>
                         <div class="bg-[#282c34] rounded-lg p-3">
-<pre><code class="language-sql">-- El usuario da clic en "Comprar"
+<pre><code class="language-sql">-- El sistema registra a una nueva persona
 START TRANSACTION;
 
-INSERT INTO ordenes (id_cliente, total, fecha) 
-VALUES (4589, 1200.50, NOW());
+INSERT INTO personas (id_persona, nombre, edad, ciudad, fecha_registro) 
+VALUES (8492, 'Ana Garcia', 28, 'CDMX', NOW());
 
-UPDATE inventario 
-SET stock = stock - 1 
-WHERE id_producto = 'LAPTOP-01';
+UPDATE estadisticas_ciudad 
+SET total_habitantes = total_habitantes + 1 
+WHERE ciudad = 'CDMX';
 
 COMMIT; -- Cumple propiedades ACID</code></pre>
                         </div>
@@ -313,6 +315,30 @@ COMMIT; -- Cumple propiedades ACID</code></pre>
                             </div>
                         </div>
                     </div>
+
+                    <!-- PASO A PASO BIGQUERY: OLTP a BigQuery -->
+                    <div class="bg-blue-50/50 border border-blue-200 rounded-xl p-6 shadow-sm mt-8">
+                        <h4 class="font-bold text-blue-900 text-lg mb-3 flex items-center">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" class="w-5 h-5 mr-2" alt="GCP Logo"/>
+                            Paso a paso en BigQuery: Consultando OLTP (Consultas Federadas)
+                        </h4>
+                        <p class="text-sm text-slate-600 mb-4">Aunque BigQuery no es para OLTP, a menudo necesitamos consultar la base de datos operativa (ej. Cloud SQL) en tiempo real sin tener que duplicar los datos. Esto se logra mediante <strong>Consultas Federadas</strong>.</p>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-700 mb-4 font-medium">
+                            <li>Ve a la consola de <strong>BigQuery</strong> en Google Cloud.</li>
+                            <li>En el panel Explorador (lado izquierdo), haz clic en el botón <strong>+ Agregar datos</strong> y selecciona <strong>Conexiones externas</strong>.</li>
+                            <li>Elige el origen (ej. <strong>Cloud SQL para MySQL</strong>) y configura las credenciales de tu base de datos OLTP.</li>
+                            <li>Abre una nueva pestaña del editor de consultas en BigQuery.</li>
+                            <li>Escribe una consulta usando la función <code>EXTERNAL_QUERY()</code> para leer la base transaccional en vivo y haz clic en <strong>EJECUTAR</strong>.</li>
+                        </ol>
+                        <div class="bg-[#282c34] rounded-lg p-3 text-xs overflow-x-auto shadow-inner">
+<pre><code class="language-sql">-- Ejecutar esto en BigQuery para leer tu BD transaccional (OLTP)
+SELECT * FROM EXTERNAL_QUERY(
+    "mi-proyecto.us-central1.mi_conexion_sql", 
+    "SELECT id_persona, nombre, ciudad FROM personas WHERE fecha_registro = CURDATE();"
+);</code></pre>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -339,33 +365,31 @@ COMMIT; -- Cumple propiedades ACID</code></pre>
                     <!-- Visualización Columnar -->
                     <div class="mb-8">
                         <h4 class="font-bold text-slate-800 text-sm mb-3">El secreto de OLAP: Almacenamiento Columnar</h4>
-                        <p class="text-xs text-slate-600 mb-3">A diferencia de OLTP que guarda por filas, OLAP guarda por columnas. Esto permite sumar millones de precios en segundos sin leer nombres o direcciones.</p>
+                        <p class="text-xs text-slate-600 mb-3">A diferencia de OLTP que guarda por filas, OLAP guarda por columnas. Esto permite promediar edades de millones de personas en segundos sin leer sus nombres o correos.</p>
                         <div class="flex gap-4 opacity-80">
                             <div class="bg-slate-100 border border-slate-300 rounded p-2 text-center flex-1">
-                                <div class="bg-blue-500 text-white text-xs font-bold py-1 rounded mb-1">Total_Venta ($)</div>
-                                <div class="text-xs text-slate-500">1200.50<br>30.00<br>450.99<br>...<br>(Millones contiguos)</div>
+                                <div class="bg-blue-500 text-white text-xs font-bold py-1 rounded mb-1">Edad</div>
+                                <div class="text-xs text-slate-500">28<br>35<br>42<br>...<br>(Millones contiguos)</div>
                             </div>
                             <div class="bg-slate-100 border border-slate-300 rounded p-2 text-center flex-1">
-                                <div class="bg-slate-400 text-white text-xs font-bold py-1 rounded mb-1">Region</div>
-                                <div class="text-xs text-slate-500">Norte<br>Sur<br>Norte<br>...<br>(Ignorado si no se usa)</div>
+                                <div class="bg-slate-400 text-white text-xs font-bold py-1 rounded mb-1">Ciudad</div>
+                                <div class="text-xs text-slate-500">CDMX<br>Monterrey<br>CDMX<br>...<br>(Ignorado si no se usa)</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-slate-100 rounded-xl p-5 border border-slate-200">
+                    <div class="bg-slate-100 rounded-xl p-5 border border-slate-200 mb-6">
                         <h4 class="font-bold text-slate-800 text-sm mb-3">Ejemplo de consulta OLAP (BigQuery)</h4>
-                        <p class="text-xs text-slate-600 mb-2">Lee millones de registros, los agrupa y calcula promedios (Analítica pesada).</p>
+                        <p class="text-xs text-slate-600 mb-2">Lee millones de registros de personas, los agrupa por ciudad y calcula métricas demográficas (Analítica pesada).</p>
                         <div class="bg-[#282c34] rounded-lg p-3">
-<pre><code class="language-sql">-- El gerente quiere ver tendencias anuales
+<pre><code class="language-sql">-- El gerente quiere ver la distribución demográfica
 SELECT 
-    EXTRACT(MONTH FROM fecha) AS mes,
-    categoria,
-    SUM(total) AS ingresos_totales,
-    AVG(total) AS ticket_promedio
-FROM `historico_ventas`
-WHERE EXTRACT(YEAR FROM fecha) = 2025
-GROUP BY mes, categoria
-ORDER BY ingresos_totales DESC;</code></pre>
+    ciudad,
+    COUNT(id_persona) AS total_personas,
+    AVG(edad) AS edad_promedio
+FROM `dataset_personas.directorio_nacional`
+GROUP BY ciudad
+ORDER BY total_personas DESC;</code></pre>
                         </div>
                         <div class="mt-3 flex justify-between items-center">
                             <span class="text-xs font-bold text-slate-500">Herramientas GCP:</span>
@@ -374,6 +398,27 @@ ORDER BY ingresos_totales DESC;</code></pre>
                             </div>
                         </div>
                     </div>
+
+                    <!-- PASO A PASO BIGQUERY: OLAP -->
+                    <div class="bg-blue-50/50 border border-blue-200 rounded-xl p-6 shadow-sm mt-8">
+                        <h4 class="font-bold text-blue-900 text-lg mb-3 flex items-center">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" class="w-5 h-5 mr-2" alt="GCP Logo"/>
+                            Paso a paso en BigQuery: Ejecutando Análisis Masivo (OLAP)
+                        </h4>
+                        <p class="text-sm text-slate-600 mb-4">Aquí es donde BigQuery brilla. Vamos a ejecutar una consulta sobre millones de registros históricos que ya están en nuestro Datawarehouse.</p>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-700 font-medium">
+                            <li>Ingresa a tu <strong>BigQuery Workspace</strong> en Google Cloud.</li>
+                            <li>En el Explorador, despliega tu Proyecto &gt; tu Dataset (ej. <code>dataset_personas</code>) y haz clic en tu tabla (ej. <code>directorio_nacional</code>).</li>
+                            <li>Revisa la pestaña <strong>Esquema (Schema)</strong> para ver los nombres y tipos de datos de cada columna.</li>
+                            <li>Haz clic en el botón azul <strong>+ REDACTAR CONSULTA nueva</strong> (Compose new query).</li>
+                            <li>Pega tu consulta SQL (como la del ejemplo de arriba) en el área de texto.</li>
+                            <li class="bg-yellow-100 p-2 rounded inline-block text-yellow-800">
+                                <strong>¡Control de Costos!</strong> Observa la esquina superior derecha del editor. Verás una palomita verde indicando: <em>"Esta consulta procesará X GB cuando se ejecute"</em>.
+                            </li>
+                            <li>Haz clic en <strong>EJECUTAR</strong> (Run) y explora los resultados en el panel inferior.</li>
+                        </ol>
+                    </div>
+
                 </div>
             </section>
 
@@ -390,7 +435,7 @@ ORDER BY ingresos_totales DESC;</code></pre>
                     </p>
 
                     <!-- SIMULADOR INTERFAZ GCP -->
-                    <div class="gcp-ui-container shadow-xl">
+                    <div class="gcp-ui-container shadow-xl mb-6">
                         <!-- GCP Header -->
                         <div class="gcp-ui-header">
                             <div class="flex items-center gap-3">
@@ -412,12 +457,12 @@ ORDER BY ingresos_totales DESC;</code></pre>
                             <!-- Sidebar GCP -->
                             <div class="gcp-ui-sidebar w-full md:w-1/4 hidden md:block">
                                 <p class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide">Explorador</p>
-                                <div class="gcp-tree-item"><i class="fas fa-project-diagram text-slate-400 mr-2"></i> e-commerce-latam</div>
+                                <div class="gcp-tree-item"><i class="fas fa-project-diagram text-slate-400 mr-2"></i> censo-nacional-2026</div>
                                 <div class="pl-4">
-                                    <div class="gcp-tree-item"><i class="fas fa-database text-blue-500 mr-2"></i> dataset_ventas</div>
+                                    <div class="gcp-tree-item"><i class="fas fa-database text-blue-500 mr-2"></i> dataset_personas</div>
                                     <div class="pl-4">
-                                        <div class="gcp-tree-item bg-blue-50 text-blue-700 font-bold"><i class="fas fa-table text-slate-400 mr-2"></i> historico_ventas</div>
-                                        <div class="gcp-tree-item"><i class="fas fa-table text-slate-400 mr-2"></i> clientes_crm</div>
+                                        <div class="gcp-tree-item bg-blue-50 text-blue-700 font-bold"><i class="fas fa-table text-slate-400 mr-2"></i> directorio_nacional</div>
+                                        <div class="gcp-tree-item"><i class="fas fa-table text-slate-400 mr-2"></i> perfiles_ingresos</div>
                                     </div>
                                 </div>
                             </div>
@@ -428,11 +473,12 @@ ORDER BY ingresos_totales DESC;</code></pre>
                                 <div class="p-4 bg-white border-b border-slate-200">
                                     <div class="bg-slate-50 rounded border border-slate-200 p-3 text-sm font-mono text-blue-700 leading-relaxed overflow-x-auto">
                                         <span class="text-purple-600 font-bold">SELECT</span><br>
-                                        &nbsp;&nbsp;categoria,<br>
-                                        &nbsp;&nbsp;<span class="text-purple-600 font-bold">SUM</span>(total) <span class="text-purple-600 font-bold">AS</span> ingresos_totales<br>
-                                        <span class="text-purple-600 font-bold">FROM</span> `e-commerce-latam.dataset_ventas.historico_ventas`<br>
-                                        <span class="text-purple-600 font-bold">GROUP BY</span> categoria<br>
-                                        <span class="text-purple-600 font-bold">ORDER BY</span> ingresos_totales <span class="text-purple-600 font-bold">DESC</span>;
+                                        &nbsp;&nbsp;ciudad,<br>
+                                        &nbsp;&nbsp;<span class="text-purple-600 font-bold">COUNT</span>(id_persona) <span class="text-purple-600 font-bold">AS</span> total_personas,<br>
+                                        &nbsp;&nbsp;<span class="text-purple-600 font-bold">ROUND</span>(<span class="text-purple-600 font-bold">AVG</span>(edad), 1) <span class="text-purple-600 font-bold">AS</span> edad_promedio<br>
+                                        <span class="text-purple-600 font-bold">FROM</span> `censo-nacional-2026.dataset_personas.directorio_nacional`<br>
+                                        <span class="text-purple-600 font-bold">GROUP BY</span> ciudad<br>
+                                        <span class="text-purple-600 font-bold">ORDER BY</span> total_personas <span class="text-purple-600 font-bold">DESC</span>;
                                     </div>
                                 </div>
 
@@ -444,9 +490,124 @@ ORDER BY ingresos_totales DESC;</code></pre>
                         </div>
                     </div>
                     
-                    <div class="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded text-sm text-slate-700">
+                    <div class="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded text-sm text-slate-700 mb-8">
                         <i class="fas fa-info-circle text-blue-500 mr-2"></i> <strong>Nota para el laboratorio real:</strong> En BigQuery (OLAP) no necesitas configurar índices ni preocuparte por el tamaño del servidor. Cobran por Gigabyte escaneado, no por tener el servidor encendido. ¡Por eso es vital usar <code>LIMIT</code> cuando pruebas consultas!
                     </div>
+
+                    <!-- PASO A PASO BIGQUERY: Exportación y UI -->
+                    <div class="bg-blue-50/50 border border-blue-200 rounded-xl p-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-lg mb-3 flex items-center">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" class="w-5 h-5 mr-2" alt="GCP Logo"/>
+                            Paso a paso en BigQuery: Exportación y Visualización
+                        </h4>
+                        <p class="text-sm text-slate-600 mb-4">El ciclo OLAP termina cuando entregamos valor. Una vez que la interfaz gráfica te devuelve los resultados, el siguiente paso es dárselos a los tomadores de decisiones.</p>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-700 font-medium">
+                            <li>Después de ejecutar tu consulta, ubícate en el panel inferior de <strong>Resultados de la consulta</strong>.</li>
+                            <li>Busca y haz clic en el botón <strong>GUARDAR RESULTADOS</strong>.</li>
+                            <li>Selecciona <strong>CSV (archivo local)</strong> para descargar, o <strong>Google Sheets</strong> para compartir la tabla en la nube.</li>
+                            <li>Para ir al siguiente nivel: Haz clic en el botón <strong>EXPLORAR DATOS</strong> (junto a Guardar Resultados).</li>
+                            <li>Selecciona <strong>Explorar con Looker Studio</strong>. GCP abrirá automáticamente una nueva pestaña conectada a tus datos lista para arrastrar gráficos y crear un dashboard.</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 2.5 NUEVO: Ejercicios y Retos Prácticos -->
+            <section id="2.5" class="scroll-mt-24">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-amber-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-amber-200"><i class="fas fa-code"></i></span>
+                    <h2 class="text-3xl font-bold text-slate-800">Retos Prácticos</h2>
+                </div>
+
+                <div class="content-card p-6 md:p-8 space-y-8">
+                    <p class="text-slate-600">
+                        Demuestra lo que has aprendido completando los siguientes retos de código. Piensa tu respuesta y luego haz clic en "Ver Solución" para comprobar si estás en lo correcto.
+                    </p>
+
+                    <!-- Reto 1: SQL OLAP -->
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+                            <h3 class="font-bold text-slate-800"><i class="fas fa-database text-blue-500 mr-2"></i>Reto 1: Consulta Analítica (SQL)</h3>
+                            <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded font-bold">Dificultad: Media</span>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-slate-600 mb-4">
+                                Tienes la tabla <code>directorio_nacional</code> en BigQuery con los campos: <code>id_persona</code>, <code>nombre</code>, <code>profesion</code> y <code>estado_civil</code>. <br><br>
+                                <strong>Tu tarea:</strong> Escribe una consulta SQL para contar cuántas personas hay agrupadas por <code>profesion</code>, pero <strong>solo</strong> para aquellas cuyo <code>estado_civil</code> sea 'Casado'. Ordena de mayor a menor cantidad.
+                            </p>
+                            
+                            <button onclick="toggleSolution('solucion-sql')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-2 px-4 rounded-lg text-sm transition">
+                                <i class="fas fa-eye mr-2"></i>Ver Solución
+                            </button>
+
+                            <div id="solucion-sql" class="hidden mt-4 bg-[#282c34] rounded-lg p-4 animate-pop">
+<pre><code class="language-sql">SELECT 
+    profesion, 
+    COUNT(*) AS total_personas
+FROM `tu_proyecto.dataset_personas.directorio_nacional`
+WHERE estado_civil = 'Casado'
+GROUP BY profesion
+ORDER BY total_personas DESC;</code></pre>
+                                <p class="text-xs text-green-400 mt-2 border-t border-slate-700 pt-2">
+                                    <strong>Explicación:</strong> Filtramos primero (WHERE estado_civil = 'Casado'), luego agrupamos por profesión (GROUP BY) y usamos la función de agregación COUNT() para contar las personas en cada grupo.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reto 2: Python / GCP -->
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+                            <h3 class="font-bold text-slate-800"><i class="fab fa-python text-amber-500 mr-2"></i>Reto 2: Scripting de Ingesta (Python)</h3>
+                            <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded font-bold">Dificultad: Fácil</span>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-slate-600 mb-4">
+                                Revisa el siguiente script de Python diseñado para cargar datos de personas a Google BigQuery. Faltan dos palabras clave representadas por <code>____</code>. Identifica cuáles son.
+                            </p>
+                            
+                            <div class="bg-slate-100 p-4 rounded-lg font-mono text-sm text-slate-800 mb-4 border border-slate-200">
+                                from google.cloud import bigquery<br><br>
+                                client = bigquery.<strong>____</strong>(project='censo-nacional')<br>
+                                table_id = "censo-nacional.dataset_personas.nuevos_registros"<br><br>
+                                with open("nuevas_personas.csv", "rb") as source_file:<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;job = client.<strong>____</strong>(source_file, table_id)<br>
+                                job.result()
+                            </div>
+
+                            <button onclick="toggleSolution('solucion-py')" class="bg-amber-100 hover:bg-amber-200 text-amber-700 font-bold py-2 px-4 rounded-lg text-sm transition">
+                                <i class="fas fa-eye mr-2"></i>Ver Solución
+                            </button>
+
+                            <div id="solucion-py" class="hidden mt-4 bg-emerald-50 border border-emerald-200 rounded-lg p-4 animate-pop">
+                                <p class="text-sm text-emerald-800 font-medium">Las palabras que faltan son:</p>
+                                <ul class="list-disc list-inside mt-2 text-emerald-700 font-mono text-sm">
+                                    <li><strong>Client</strong> (Para instanciar la conexión: <code>bigquery.Client</code>)</li>
+                                    <li><strong>load_table_from_file</strong> (Para cargar el archivo: <code>client.load_table_from_file</code>)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PASO A PASO BIGQUERY: Pruebas con Datos Públicos -->
+                    <div class="bg-blue-50/50 border border-blue-200 rounded-xl p-6 shadow-sm mt-8">
+                        <h4 class="font-bold text-blue-900 text-lg mb-3 flex items-center">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" class="w-5 h-5 mr-2" alt="GCP Logo"/>
+                            Paso a paso en BigQuery: Cómo probar retos SQL hoy mismo
+                        </h4>
+                        <p class="text-sm text-slate-600 mb-4">Si aún no tienes datos en tu proyecto, Google ofrece petabytes de datos reales gratuitos (Public Datasets) para practicar estos retos y consultas OLAP.</p>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-700 font-medium">
+                            <li>En la consola de BigQuery, ve al panel izquierdo (Explorador) y haz clic en <strong>+ AGREGAR</strong>.</li>
+                            <li>Selecciona la opción <strong>Conjuntos de datos públicos (Public Datasets)</strong>.</li>
+                            <li>En el buscador, escribe <strong>Census Bureau</strong> (Censo) y presiona enter.</li>
+                            <li>Añádelo a tu proyecto (Aparecerá en el árbol del explorador con el nombre <code>bigquery-public-data</code>).</li>
+                            <li>Abre una consulta nueva y adapta tu SQL para leer esta tabla demográfica real. Ejemplo: <br>
+                                <code class="ml-5 mt-1 block text-xs bg-white border p-2 rounded w-fit font-normal text-blue-700">SELECT * FROM `bigquery-public-data.census_bureau_usa.population_by_zip_2010` LIMIT 10;</code>
+                            </li>
+                        </ol>
+                    </div>
+
                 </div>
             </section>
 
@@ -470,7 +631,7 @@ ORDER BY ingresos_totales DESC;</code></pre>
                         <div class="bg-white rounded-2xl p-6 max-w-md mx-auto shadow-xl transition-all duration-300" id="game-card">
                             <div class="text-slate-400 text-xs font-bold tracking-widest mb-4 uppercase" id="game-counter">Escenario 1 de 4</div>
                             <h3 class="text-lg font-bold text-slate-800 mb-6 min-h-[80px] flex items-center justify-center" id="game-question">
-                                "Un cliente está en el cajero automático y solicita retirar $2,000 MXN. El sistema debe verificar saldo y descontarlo inmediatamente."
+                                "Un ciudadano acude al registro civil para actualizar su domicilio. El empleado ingresa el ID, guarda la nueva dirección y el sistema confirma el cambio inmediatamente."
                             </h3>
                             
                             <div class="grid grid-cols-2 gap-4">
@@ -539,6 +700,16 @@ ORDER BY ingresos_totales DESC;</code></pre>
         // Cerrar menú móvil
         function closeMenu() { document.getElementById('mobile-menu').classList.add('hidden'); }
 
+        // --- Mostrar/Ocultar Soluciones Retos ---
+        function toggleSolution(id) {
+            const sol = document.getElementById(id);
+            if (sol.classList.contains('hidden')) {
+                sol.classList.remove('hidden');
+            } else {
+                sol.classList.add('hidden');
+            }
+        }
+
         // --- Lógica del Simulador de Interfaz BigQuery (NUEVO) ---
         function runGcpQuery() {
             const btn = document.getElementById('btn-run-bq');
@@ -561,7 +732,7 @@ ORDER BY ingresos_totales DESC;</code></pre>
                 btn.disabled = false;
                 
                 resArea.innerHTML = `
-                    <div class="w-full">
+                    <div class="w-full animate-pop">
                         <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
                             <span class="text-xs font-bold text-green-600"><i class="fas fa-check mr-1"></i> Consulta completa (1.2 seg en transcurrir, 2.4 GB procesados)</span>
                             <span class="text-xs text-slate-400 hover:text-blue-500 cursor-pointer"><i class="fas fa-download mr-1"></i> Exportar a CSV</span>
@@ -570,25 +741,29 @@ ORDER BY ingresos_totales DESC;</code></pre>
                             <thead class="bg-slate-50 text-slate-600">
                                 <tr>
                                     <th class="p-2 border border-slate-200">Fila</th>
-                                    <th class="p-2 border border-slate-200">categoria</th>
-                                    <th class="p-2 border border-slate-200 text-right">ingresos_totales</th>
+                                    <th class="p-2 border border-slate-200">ciudad</th>
+                                    <th class="p-2 border border-slate-200 text-right">total_personas</th>
+                                    <th class="p-2 border border-slate-200 text-right">edad_promedio</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="hover:bg-slate-50">
                                     <td class="p-2 border border-slate-200 text-slate-400">1</td>
-                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Electrónica</td>
-                                    <td class="p-2 border border-slate-200 text-right font-mono">$ 1,450,200.00</td>
+                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Ciudad de México</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">1,450,200</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">32.4</td>
                                 </tr>
                                 <tr class="hover:bg-slate-50">
                                     <td class="p-2 border border-slate-200 text-slate-400">2</td>
-                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Línea Blanca</td>
-                                    <td class="p-2 border border-slate-200 text-right font-mono">$ 890,150.50</td>
+                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Guadalajara</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">890,150</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">30.1</td>
                                 </tr>
                                 <tr class="hover:bg-slate-50">
                                     <td class="p-2 border border-slate-200 text-slate-400">3</td>
-                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Moda</td>
-                                    <td class="p-2 border border-slate-200 text-right font-mono">$ 450,900.25</td>
+                                    <td class="p-2 border border-slate-200 font-medium text-slate-700">Monterrey</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">750,900</td>
+                                    <td class="p-2 border border-slate-200 text-right font-mono">29.8</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -601,24 +776,24 @@ ORDER BY ingresos_totales DESC;</code></pre>
         // --- Lógica del Laboratorio OLTP vs OLAP ---
         const gameData = [
             {
-                q: '"Un cliente está en el cajero automático y solicita retirar $2,000. El sistema debe verificar el saldo y descontarlo inmediatamente."',
+                q: '"Un ciudadano acude al registro civil para actualizar su domicilio. El empleado ingresa el ID, guarda la nueva dirección y el sistema confirma el cambio inmediatamente."',
                 a: 'OLTP',
-                reason: 'Es una operación transaccional crítica (ACID), afecta un solo registro en tiempo real.'
+                reason: 'Es una operación transaccional crítica (ACID), afecta un solo registro de persona en tiempo real.'
             },
             {
-                q: '"El CEO pide un reporte de las ventas promedio trimestrales agrupadas por país de los últimos 5 años."',
+                q: '"El director del Censo Nacional pide un reporte que muestre el crecimiento poblacional y la edad promedio agrupada por ciudad en los últimos 10 años."',
                 a: 'OLAP',
-                reason: 'Requiere escanear millones de filas históricas, agrupar y calcular agregaciones. Clásico Datawarehouse.'
+                reason: 'Requiere escanear millones de filas históricas, agrupar y calcular promedios. Clásico uso de Datawarehouse (BigQuery).'
             },
             {
-                q: '"Un sensor de IoT en un camión de reparto envía sus coordenadas GPS cada 3 segundos a la base de datos central."',
+                q: '"Durante las elecciones, miles de casillas a nivel nacional insertan continuamente el registro de los ciudadanos que acaban de emitir su voto en tiempo real."',
                 a: 'OLTP',
-                reason: 'Son inserciones continuas, pequeñas y rápidas (Alta concurrencia de escritura).'
+                reason: 'Son inserciones continuas, pequeñas y rápidas (Alta concurrencia de escritura) donde no se pueden perder datos.'
             },
             {
-                q: '"El equipo de Marketing ejecuta un modelo de Machine Learning en Vertex AI para segmentar a los clientes según su historial de compras de 2020 a 2025 guardado en BigQuery."',
+                q: '"Un equipo de sociólogos entrena un modelo de Machine Learning en Vertex AI analizando las profesiones e ingresos de 120 millones de personas guardadas en BigQuery."',
                 a: 'OLAP',
-                reason: 'Machine Learning requiere datos masivos históricos y consolidados (Lectura masiva).'
+                reason: 'Machine Learning requiere lectura masiva de datos consolidados para descubrir patrones ocultos.'
             }
         ];
 
