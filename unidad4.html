@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad 4: MongoDB y NoSQL - Big Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+        
+        body { font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .gradient-nav { background: linear-gradient(90deg, #1e1b4b 0%, #312e81 100%); }
+        .content-card { background: white; border-radius: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; }
+        .content-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .pop { animation: pop 0.3s; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- BARRA DE NAVEGACIÓN SUPERIOR (TOPBAR) -->
+    <nav class="gradient-nav text-white sticky top-0 z-50 shadow-xl border-b border-indigo-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo / Volver -->
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <a href="index.html" class="text-indigo-200 hover:text-white transition bg-white/10 p-2 rounded-lg" title="Volver al índice">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="flex flex-col">
+                        <h1 class="font-bold text-lg leading-none">Unidad 4</h1>
+                        <span class="text-indigo-300 text-xs hidden sm:block">Bases de Datos NoSQL</span>
+                    </div>
+                </div>
+
+                <!-- Links de Navegación (Desktop) -->
+                <div class="hidden lg:flex flex-1 mx-8 overflow-x-auto items-center space-x-2 no-scrollbar justify-center">
+                    <a href="unidad2.html" class="whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-200 hover:text-white transition"><i class="fas fa-arrow-left mr-1"></i> Unidad 2</a>
+                    <a href="unidad3.html" class="whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-purple-200 hover:text-white transition"><i class="fas fa-arrow-left mr-1"></i> Unidad 3</a>
+                    
+                    <div class="h-4 w-px bg-indigo-500 mx-2"></div> <!-- Separador -->
+                    
+                    <a href="#4.1" class="whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-bold bg-white/10 text-white"><i class="fas fa-terminal mr-1"></i>4.1 Shell</a>
+                    <a href="#4.2" class="whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-cloud mr-1"></i>4.2 Atlas & CSV</a>
+                    <a href="#4.3" class="whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-chart-pie mr-1"></i>4.3 Looker</a>
+                    <a href="#4.4" class="whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-medium hover:bg-white/10 text-indigo-100 hover:text-white transition"><i class="fas fa-code mr-1"></i>4.4 Retos</a>
+                </div>
+
+                <!-- Progreso y Menú Móvil -->
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <div class="hidden md:block w-32">
+                        <div class="flex justify-between text-[10px] text-indigo-200 mb-1">
+                            <span>Progreso</span>
+                            <span id="progressText">0%</span>
+                        </div>
+                        <div class="w-full bg-indigo-900 h-1.5 rounded-full">
+                            <div class="bg-indigo-400 h-1.5 rounded-full w-0 transition-all duration-1000" id="progressBar"></div>
+                        </div>
+                    </div>
+                    <button class="lg:hidden text-indigo-200 hover:text-white p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-indigo-950 border-t border-indigo-900 px-4 py-4 absolute w-full shadow-2xl z-50">
+            <div class="flex flex-col gap-2 text-sm font-medium">
+                 <a href="unidad2.html" class="px-3 py-2 rounded bg-indigo-900/50 hover:bg-indigo-800 text-indigo-100">Ir a Unidad 2: Almacenes de Datos</a>
+                 <a href="unidad3.html" class="px-3 py-2 rounded bg-purple-900/50 hover:bg-purple-800 text-purple-100">Ir a Unidad 3: Dashboards Looker</a>
+                 <div class="h-px bg-indigo-800 my-2"></div>
+                 <a href="#4.1" class="px-3 py-2 rounded bg-green-900/50 hover:bg-green-800 text-green-100" onclick="closeMenu()">4.1 Shell y Concepto NoSQL</a>
+                 <a href="#4.2" class="px-3 py-2 rounded bg-green-900/50 hover:bg-green-800 text-green-100" onclick="closeMenu()">4.2 Clúster Atlas y CSV</a>
+                 <a href="#4.3" class="px-3 py-2 rounded bg-green-900/50 hover:bg-green-800 text-green-100" onclick="closeMenu()">4.3 Conexión a Looker Studio</a>
+                 <a href="#4.4" class="px-3 py-2 rounded bg-green-900/50 hover:bg-green-800 text-green-100" onclick="closeMenu()">4.4 Retos Prácticos</a>
+            </div>
+        </div>
+        
+        <div class="h-1 bg-indigo-900 md:hidden w-full absolute bottom-0 left-0 z-50">
+             <div class="bg-indigo-400 h-1 w-0 transition-all duration-1000" id="progressBarMobile"></div>
+        </div>
+    </nav>
+
+    <!-- HEADER DE UNIDAD -->
+    <header class="bg-white border-b border-slate-200 py-12 px-4 relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-64 h-64 bg-green-50 rounded-full blur-3xl -mr-20 -mt-20 z-0"></div>
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-widest mb-4">
+                Nuevos Paradigmas de Almacenamiento
+            </span>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">MongoDB y NoSQL</h2>
+            <p class="text-slate-600 text-lg max-w-2xl mx-auto">
+                No todos los datos del censo de personas encajan en tablas perfectas. ¿Qué pasa si una persona tiene 3 números de teléfono, 5 hobbies y otra persona no tiene ninguno? Aquí entran las bases de datos orientadas a documentos (JSON): <strong>MongoDB</strong>.
+            </p>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="w-full">
+        <div class="max-w-4xl mx-auto px-4 py-12 space-y-20">
+
+            <!-- 4.1 Concepto NoSQL y Shell -->
+            <section id="4.1" class="scroll-mt-24">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-green-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-green-200">4.1</span>
+                    <h2 class="text-2xl font-bold text-slate-800">Flexibilidad JSON y MongoDB Shell (mongosh)</h2>
+                </div>
+                
+                <div class="content-card p-6 md:p-8 border-t-4 border-green-500">
+                    <p class="text-slate-600 mb-6 text-lg">
+                        En MongoDB, en lugar de <strong>Tablas y Filas</strong>, tenemos <strong>Colecciones y Documentos</strong>. Cada documento es un objeto JSON independiente. Esta flexibilidad permite evolucionar rápidamente el esquema de nuestros datos (Ideal para Big Data semi-estructurado).
+                    </p>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-8">
+                        <h4 class="font-bold text-slate-800 text-sm mb-2"><i class="fas fa-terminal text-green-600 mr-2"></i>Instalación de MongoDB Shell (mongosh)</h4>
+                        <p class="text-xs text-slate-600 mb-4">Para comunicarnos con cualquier base de datos de MongoDB desde nuestra terminal, necesitamos su intérprete de comandos.</p>
+                        <ol class="list-decimal list-inside text-sm text-slate-700 space-y-2 font-medium mb-4">
+                            <li>Descarga <strong>mongosh</strong> desde la página oficial de descargas de MongoDB (apto para Windows, Mac y Linux).</li>
+                            <li>Instala o descomprime el archivo y asegúrate de agregar la ruta a las variables de entorno (PATH) de tu sistema.</li>
+                            <li>Abre tu terminal y escribe <code>mongosh</code> para verificar la instalación. Si ves la versión impresa, ¡estás listo!</li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-slate-100 rounded-xl p-5 border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-sm mb-3">Comandos Básicos de Comunicación</h4>
+                        <p class="text-xs text-slate-600 mb-3">En la consola interactiva (mongosh), usamos sintaxis de JavaScript para crear e interactuar con nuestros datasets.</p>
+                        
+                        <div class="bg-[#282c34] rounded-lg overflow-hidden shadow-lg border border-slate-700">
+                            <div class="bg-slate-800 px-4 py-2 flex items-center border-b border-slate-700">
+                                <span class="text-xs text-green-400 font-mono font-bold">&gt;_ mongosh</span>
+                            </div>
+<pre><code class="language-javascript">// 1. Usar o crear la base de datos
+use censo_nacional_db;
+
+// 2. Insertar un dataset de personas (Documentos JSON)
+db.personas.insertMany([
+  { 
+    id_persona: "A100", 
+    nombre: "Laura Sanchez", 
+    edad: 25, 
+    ciudad: "Monterrey",
+    habilidades_tech: ["Python", "GCP", "NoSQL"] // ¡Un arreglo dentro del registro!
+  },
+  { 
+    id_persona: "A101", 
+    nombre: "Roberto Diaz", 
+    edad: 42, 
+    ciudad: "CDMX",
+    vehiculo: { tipo: "Auto", año: 2020 } // ¡Un objeto anidado, y sin habilidades_tech!
+  }
+]);
+
+// 3. Consultar todos los registros de Monterrey
+db.personas.find({ ciudad: "Monterrey" });
+
+// 4. Actualizar agregando un nuevo campo dinámicamente
+db.personas.updateOne(
+  { nombre: "Laura Sanchez" }, 
+  { $set: { estado_civil: "Soltera" } }
+);</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4.2 Atlas y Subida de CSV -->
+            <section id="4.2" class="scroll-mt-24">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-green-700 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-green-200">4.2</span>
+                    <h2 class="text-3xl font-bold text-slate-800">Atlas y Carga de Datasets (CSV)</h2>
+                </div>
+
+                <div class="bg-green-50/50 border border-green-200 rounded-xl p-6 shadow-sm mb-8">
+                    <h4 class="font-bold text-green-900 text-lg mb-3 flex items-center">
+                        <i class="fas fa-cloud text-green-600 mr-2"></i>
+                        Paso a paso: Creación de Clúster en MongoDB Atlas
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-4"><strong>MongoDB Atlas</strong> es la versión 100% administrada en la nube (DBaaS). Evitamos configurar servidores locales y ganamos accesibilidad global.</p>
+                    <ol class="list-decimal list-inside space-y-3 text-sm text-slate-700 font-medium">
+                        <li>Ve a <a href="https://www.mongodb.com/atlas/database" target="_blank" class="text-blue-600 underline">MongoDB Atlas</a> y regístrate para obtener una cuenta gratuita.</li>
+                        <li>Haz clic en <strong>Build a Database</strong>. Selecciona el plan <strong>M0 (Free)</strong>.</li>
+                        <li>Elige tu proveedor en la nube. Como estamos trabajando con Google, selecciona <strong>Google Cloud</strong> y una región cercana (ej. <em>us-central1</em>). Haz clic en <em>Create</em>.</li>
+                        <li><strong>Seguridad - Crear Usuario:</strong> En la pestaña <em>Database Access</em>, crea un usuario. Llamémoslo <code>admin_censo</code> con una contraseña segura.</li>
+                        <li><strong>Seguridad - Acceso de Red:</strong> En <em>Network Access</em>, haz clic en <em>Add IP Address</em> y selecciona <strong>Allow Access from Anywhere (0.0.0.0/0)</strong>. <em>(Nota: Esto es para nuestra práctica, en producción solo agregarías IPs confiables).</em></li>
+                        <li>Ve a <em>Database</em> y haz clic en <strong>Connect</strong>. Selecciona <strong>Connect with the MongoDB Shell</strong> para obtener tu <em>Connection String</em>.</li>
+                    </ol>
+                    <div class="mt-4 bg-slate-800 p-3 rounded-lg border border-slate-700">
+                        <code class="text-xs text-green-400 font-mono">mongodb+srv://admin_censo:TU_PASSWORD@cluster0.abcde.mongodb.net/</code>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <h4 class="font-bold text-slate-800 text-lg mb-3 flex items-center">
+                        <i class="fas fa-file-csv text-slate-500 mr-2"></i>
+                        Paso a paso: Subir nuestro CSV a Atlas (mongoimport)
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-4">Tenemos nuestro archivo <code>datos_personas.csv</code> de la Unidad 2. ¿Cómo lo subimos masivamente a Atlas? Usaremos la herramienta de línea de comandos <strong>mongoimport</strong> (incluida en las MongoDB Database Tools).</p>
+                    <ol class="list-decimal list-inside space-y-3 text-sm text-slate-700 font-medium mb-4">
+                        <li>Abre tu terminal del sistema operativo (CMD o Bash) en la carpeta donde tienes tu archivo <code>datos_personas.csv</code>.</li>
+                        <li>Asegúrate de tener instaladas las <em>MongoDB Database Tools</em> (se descargan desde la página oficial y se agregan al PATH).</li>
+                        <li>Ejecuta el siguiente comando, reemplazando la URI con tu cadena de conexión de Atlas:</li>
+                    </ol>
+                    <div class="bg-[#282c34] rounded-lg p-4 font-mono text-xs text-green-300 overflow-x-auto">
+                        mongoimport --uri "mongodb+srv://admin_censo:TU_PASSWORD@cluster0.abcde.mongodb.net/" \<br>
+                        &nbsp;&nbsp;--db censo_nacional_db \<br>
+                        &nbsp;&nbsp;--collection personas \<br>
+                        &nbsp;&nbsp;--type csv \<br>
+                        &nbsp;&nbsp;--headerline \<br>
+                        &nbsp;&nbsp;--file datos_personas.csv
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3"><i class="fas fa-info-circle mr-1"></i> El parámetro <code>--headerline</code> le indica a Mongo que use la primera fila del CSV como los nombres de los campos (id_persona, nombre, etc.) para armar los JSON automáticamente.</p>
+                </div>
+            </section>
+
+            <!-- 4.3 Looker Studio -->
+            <section id="4.3" class="scroll-mt-24">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-green-800 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-green-200"><i class="fas fa-project-diagram"></i></span>
+                    <h2 class="text-3xl font-bold text-slate-800">Conexión Externa a Looker Studio</h2>
+                </div>
+
+                <div class="content-card p-6 md:p-8">
+                    <p class="text-sm text-slate-600 mb-6">
+                        Ya vimos cómo conectar BigQuery. Ahora conectaremos nuestro clúster de Atlas a Looker Studio. Como los datos NoSQL vienen en formato JSON (anidados y sin esquema rígido), Looker requiere un conector especial que "traduzca" el formato a columnas planas (SQL) para poder hacer gráficos. Usaremos el conector oficial <strong>MongoDB Atlas SQL</strong>.
+                    </p>
+
+                    <h4 class="font-bold text-slate-800 text-lg mb-3">Paso a paso: Enlazando las plataformas</h4>
+                    <ol class="list-decimal list-inside space-y-4 text-sm text-slate-700 font-medium">
+                        <li class="bg-slate-50 p-3 rounded border border-slate-100">
+                            <strong>Preparar Federated Queries en Atlas:</strong> Antes de conectar Looker, Atlas necesita saber cómo traducir tu JSON a SQL. En tu panel de MongoDB Atlas, ve a <strong>Data Federation</strong> en el menú lateral y haz clic en <em>Create Federated Database</em>. Vincula tu base <code>censo_nacional_db</code>.
+                        </li>
+                        <li class="bg-slate-50 p-3 rounded border border-slate-100">
+                            <strong>Ir a Looker Studio:</strong> Abre <a href="https://lookerstudio.google.com" target="_blank" class="text-blue-600 underline">Looker Studio</a>, haz clic en "Informe vacío" o abre tu dashboard de la Unidad 3 y selecciona <strong>Añadir Datos</strong>.
+                        </li>
+                        <li class="bg-slate-50 p-3 rounded border border-slate-100">
+                            <strong>Buscar el Conector:</strong> En la barra de búsqueda de conectores, escribe <strong>MongoDB Atlas SQL</strong> (Desarrollado por MongoDB Inc.). Haz clic en él y autoriza el acceso a tu cuenta de Google.
+                        </li>
+                        <li class="bg-slate-50 p-3 rounded border border-slate-100">
+                            <strong>Llenar Credenciales:</strong> El conector te pedirá 3 datos vitales:
+                            <ul class="list-disc list-inside ml-6 mt-2 text-slate-600 font-normal">
+                                <li><strong>Federated Database Name:</strong> El nombre de la federación que creaste en el paso 1 (ej. <code>Federation-Censo</code>).</li>
+                                <li><strong>Username:</strong> <code>admin_censo</code></li>
+                                <li><strong>Password:</strong> Tu contraseña.</li>
+                            </ul>
+                        </li>
+                        <li class="bg-slate-50 p-3 rounded border border-slate-100">
+                            <strong>¡Graficar!:</strong> Haz clic en <strong>Añadir</strong>. Looker Studio ahora mapeará los campos de tus documentos MongoDB (como <code>edad</code>, <code>ciudad</code>) como si fueran columnas tradicionales. Ya puedes arrastrar gráficos de barras y pasteles mezclando datos transaccionales NoSQL con tu analítica en la nube.
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 4.4 Retos -->
+            <section id="4.4" class="scroll-mt-24 pb-10">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="bg-amber-500 text-white w-10 h-10 rounded-xl flex items-center justify-center font-black shadow-lg shadow-amber-200"><i class="fas fa-code"></i></span>
+                    <h2 class="text-3xl font-bold text-slate-800">Retos Prácticos</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Reto 1: Consultas NoSQL -->
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+                            <h3 class="font-bold text-slate-800"><i class="fas fa-database text-green-500 mr-2"></i>Reto 1: Consultas MQL</h3>
+                            <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded font-bold">Dificultad: Media</span>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <p class="text-sm text-slate-600 mb-4 flex-1">
+                                Basado en la colección <code>personas</code>, escribe el comando exacto en <em>mongosh</em> para <strong>buscar</strong> a todas las personas cuya <code>edad</code> sea <strong>mayor a 30 años</strong>. <br><br><em>Pista: En MQL (Mongo Query Language), los operadores van con un signo de dólar. Usa $gt (greater than).</em>
+                            </p>
+                            
+                            <button onclick="toggleSolution('solucion-mongo1')" class="bg-green-100 hover:bg-green-200 text-green-700 font-bold py-2 px-4 rounded-lg text-sm transition mt-auto">
+                                <i class="fas fa-eye mr-2"></i>Ver Solución
+                            </button>
+
+                            <div id="solucion-mongo1" class="hidden mt-4 bg-[#282c34] rounded-lg p-4 animate-pop">
+<pre><code class="language-javascript">db.personas.find(
+  { edad: { $gt: 30 } }
+);</code></pre>
+                                <p class="text-xs text-green-400 mt-2 border-t border-slate-700 pt-2">
+                                    <strong>Explicación:</strong> En lugar del <code>WHERE edad > 30</code> de SQL, MongoDB usa JSON. Declaramos el campo (edad) y como valor pasamos otro sub-objeto indicando la comparación ($gt).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reto 2: Ingesta CLI -->
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+                            <h3 class="font-bold text-slate-800"><i class="fas fa-terminal text-green-500 mr-2"></i>Reto 2: Ingesta de CSV</h3>
+                            <span class="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded font-bold">Dificultad: Fácil</span>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <p class="text-sm text-slate-600 mb-4 flex-1">
+                                Estás subiendo tu archivo <code>nuevo_censo.csv</code> a Atlas. Faltan dos parámetros clave en el comando para indicar la base de datos y decirle al sistema que ignore la primera fila asumiendo que son las cabeceras.
+                            </p>
+                            
+                            <div class="bg-slate-100 p-3 rounded-lg font-mono text-xs text-slate-800 mb-4 border border-slate-200">
+                                mongoimport --uri "mongodb+srv://..." \<br>
+                                &nbsp;&nbsp;<strong>--____</strong> censo_nacional_db \<br>
+                                &nbsp;&nbsp;--collection personas \<br>
+                                &nbsp;&nbsp;--type csv \<br>
+                                &nbsp;&nbsp;<strong>--____</strong> \<br>
+                                &nbsp;&nbsp;--file nuevo_censo.csv
+                            </div>
+                            
+                            <button onclick="toggleSolution('solucion-mongo2')" class="bg-green-100 hover:bg-green-200 text-green-700 font-bold py-2 px-4 rounded-lg text-sm transition mt-auto">
+                                <i class="fas fa-eye mr-2"></i>Ver Solución
+                            </button>
+
+                            <div id="solucion-mongo2" class="hidden mt-4 bg-green-50 border border-green-200 rounded-lg p-4 animate-pop">
+                                <ul class="list-disc list-inside mt-1 text-green-800 font-mono text-sm space-y-2">
+                                    <li><strong>--db</strong> (Para especificar la Database)</li>
+                                    <li><strong>--headerline</strong> (Para tomar la primera fila como nombres de campo)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-white py-10 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-700 p-2 rounded-lg"><i class="fas fa-university text-white text-sm"></i></div>
+                <div>
+                    <h3 class="text-base font-bold tracking-tight leading-none">Ingeniería en Informática</h3>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Especialidad en TI</p>
+                </div>
+            </div>
+            <div class="text-center md:text-right">
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">© 2026 Big Data - Unidad 4</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Inicializar Highlight.js
+        hljs.highlightAll();
+
+        // Lógica de Barra de Progreso
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            const bar = document.getElementById('progressBar');
+            const barMobile = document.getElementById('progressBarMobile');
+            const text = document.getElementById('progressText');
+            
+            if(bar.style.width !== "100%") {
+                const widthVal = scrolled + "%";
+                bar.style.width = widthVal;
+                barMobile.style.width = widthVal;
+                text.innerText = Math.round(scrolled) + "%";
+            }
+        });
+
+        // Cerrar menú móvil
+        function closeMenu() { document.getElementById('mobile-menu').classList.add('hidden'); }
+
+        // --- Mostrar/Ocultar Soluciones Retos ---
+        function toggleSolution(id) {
+            const sol = document.getElementById(id);
+            if (sol.classList.contains('hidden')) {
+                sol.classList.remove('hidden');
+            } else {
+                sol.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
